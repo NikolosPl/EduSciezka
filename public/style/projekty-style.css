@@ -1,0 +1,66 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f3f4f6; color: #333; }
+
+.pasek { background: #2563EB; color: #fff; padding: 0 20px; height: 54px; display: flex; align-items: center; justify-content: space-between; }
+.pasek .logo { font-size: 20px; font-weight: bold; }
+.pasek a { color: #fff; text-decoration: none; margin-left: 16px; font-size: 13px; }
+
+.menu { background: #1e3a8a; display: flex; padding: 0 20px; }
+.menu a { color: rgba(255,255,255,0.75); text-decoration: none; padding: 10px 14px; font-size: 14px; }
+.menu a:hover, .menu a.aktywny { color: #fff; background: rgba(255,255,255,0.1); }
+
+.tresc { padding: 20px; max-width: 1000px; margin: 0 auto; }
+
+.kom-sukces { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+.kom-blad { background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+
+.naglowek-sekcji { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.naglowek-sekcji h2 { font-size: 16px; color: #111; }
+
+.btn-pokaz { padding: 7px 14px; background: #2563EB; color: #fff; border: none; border-radius: 5px; font-size: 13px; cursor: pointer; }
+.btn-pokaz:hover { background: #1d4ed8; }
+
+.formularz-dodaj { display: none; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+.formularz-dodaj.widoczny { display: block; }
+.formularz-dodaj h3 { font-size: 14px; margin-bottom: 12px; }
+
+.rzad-pol { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.pole { flex: 1; min-width: 160px; }
+.pole label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 4px; color: #374151; }
+.pole input, .pole select, .pole textarea { width: 100%; padding: 7px 10px; border: 1px solid #d1d5db; border-radius: 5px; font-size: 13px; }
+.pole input:focus, .pole select:focus { outline: none; border-color: #2563EB; }
+
+.btn-dodaj { padding: 8px 18px; background: #2563EB; color: #fff; border: none; border-radius: 5px; font-size: 13px; cursor: pointer; }
+.btn-anuluj { padding: 8px 14px; background: #6b7280; color: #fff; border: none; border-radius: 5px; font-size: 13px; cursor: pointer; margin-left: 6px; }
+
+.projekty-lista { display: flex; flex-direction: column; gap: 12px; }
+.projekt-karta { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; border-left: 5px solid #6b7280; }
+.projekt-karta.status-planowany { border-left-color: #6b7280; }
+.projekt-karta.status-w_toku { border-left-color: #f59e0b; }
+.projekt-karta.status-zakonczony { border-left-color: #10b981; }
+.projekt-karta.status-porzucony { border-left-color: #ef4444; }
+
+.projekt-gora { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.projekt-nazwa { font-size: 15px; font-weight: bold; color: #111; }
+.projekt-opis { font-size: 13px; color: #6b7280; margin-bottom: 8px; }
+.projekt-meta { font-size: 12px; color: #9ca3af; margin-bottom: 10px; }
+
+.priorytet { font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 4px; }
+.priorytet-niski { background: #d1fae5; color: #065f46; }
+.priorytet-sredni { background: #fef3c7; color: #92400e; }
+.priorytet-wysoki { background: #fee2e2; color: #b91c1c; }
+.priorytet-krytyczny { background: #7f1d1d; color: #fff; }
+
+.status-badge { font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 4px; margin-left: 8px; }
+.sb-planowany { background: #f3f4f6; color: #374151; }
+.sb-w_toku { background: #fef3c7; color: #92400e; }
+.sb-zakonczony { background: #d1fae5; color: #065f46; }
+.sb-porzucony { background: #fee2e2; color: #b91c1c; }
+
+.projekt-akcje a { font-size: 12px; padding: 4px 8px; border-radius: 4px; text-decoration: none; margin-right: 4px; }
+.a-w-toku { background: #fef3c7; color: #92400e; }
+.a-zakonczony { background: #d1fae5; color: #065f46; }
+.a-porzucony { background: #fee2e2; color: #b91c1c; }
+
+.kropka { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 4px; }
+.pusta { text-align: center; padding: 40px; color: #9ca3af; font-size: 14px; }

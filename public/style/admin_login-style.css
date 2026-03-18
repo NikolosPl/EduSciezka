@@ -1,0 +1,16 @@
+body { font-family: Arial, sans-serif; background: #1e1b4b; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+.box { background: #fff; border-radius: 10px; box-shadow: 0 4px 30px rgba(0,0,0,0.3); width: 360px; overflow: hidden; }
+.naglowek { background: #4c1d95; color: #fff; padding: 24px; text-align: center; }
+.naglowek h1 { font-size: 22px; margin: 0 0 4px 0; }
+.naglowek p { margin: 0; font-size: 12px; opacity: 0.75; }
+.badge { background: rgba(167,139,250,0.3); color: #ddd6fe; font-size: 11px; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 6px; }
+.tresc { padding: 24px; }
+.pole { margin-bottom: 14px; }
+.pole label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 5px; color: #374151; }
+.pole input { width: 100%; padding: 9px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+.pole input:focus { outline: none; border-color: #7c3aed; }
+.btn { width: 100%; padding: 11px; background: #7c3aed; color: #fff; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; }
+.btn:hover { background: #6d28d9; }
+.blad { background: #fee2e2; color: #b91c1c; padding: 10px 12px; border-radius: 6px; font-size: 13px; margin-bottom: 14px; }
+.link-powrot { text-align: center; margin-top: 14px; font-size: 13px; }
+.link-powrot a { color: #7c3aed; text-decoration: none; }

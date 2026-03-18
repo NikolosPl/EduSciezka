@@ -1,0 +1,53 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, sans-serif; background: #f3f4f6; color: #333; }
+
+.pasek { background: #1e1b4b; color: #fff; padding: 0 20px; height: 54px; display: flex; align-items: center; justify-content: space-between; }
+.pasek .logo { font-size: 20px; font-weight: bold; color: #a78bfa; }
+.pasek a { color: #fff; text-decoration: none; margin-left: 16px; font-size: 13px; }
+.badge-admin { background: rgba(167,139,250,0.2); color: #a78bfa; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 4px; margin-left: 10px; }
+
+.menu { background: #312e81; display: flex; padding: 0 20px; }
+.menu a { color: rgba(255,255,255,0.7); text-decoration: none; padding: 10px 14px; font-size: 14px; }
+.menu a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+.tresc { padding: 20px; max-width: 1100px; margin: 0 auto; }
+
+.kom-sukces { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+.kom-blad { background: #fee2e2; color: #b91c1c; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+
+.statystyki { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
+.karta-stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 20px; flex: 1; min-width: 140px; text-align: center; border-top: 4px solid #7c3aed; }
+.karta-stat .liczba { font-size: 30px; font-weight: bold; color: #111; }
+.karta-stat .etykieta { font-size: 12px; color: #6b7280; margin-top: 4px; }
+.karta-stat.n2 { border-top-color: #2563eb; }
+.karta-stat.n3 { border-top-color: #10b981; }
+.karta-stat.n4 { border-top-color: #f59e0b; }
+
+.sekcja { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 20px; overflow: hidden; }
+.sekcja-naglowek { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 16px; }
+.sekcja-naglowek h2 { font-size: 15px; color: #111; }
+
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f3f4f6; text-align: left; padding: 8px 12px; font-size: 12px; color: #6b7280; text-transform: uppercase; border-bottom: 1px solid #e5e7eb; }
+td { padding: 9px 12px; border-bottom: 1px solid #f3f4f6; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #f9fafb; }
+
+a.akcja { font-size: 12px; padding: 4px 8px; border-radius: 4px; text-decoration: none; display: inline-block; }
+a.akcja-usun { background: #fee2e2; color: #b91c1c; }
+a.akcja-usun:hover { background: #fecaca; }
+
+.status { font-size: 11px; padding: 2px 7px; border-radius: 4px; font-weight: bold; }
+.status-do_zrobienia { background: #f3f4f6; color: #374151; }
+.status-w_toku { background: #fef3c7; color: #92400e; }
+.status-zakonczone { background: #d1fae5; color: #065f46; }
+
+.priorytet { font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 4px; }
+.priorytet-niski { background: #d1fae5; color: #065f46; }
+.priorytet-sredni { background: #fef3c7; color: #92400e; }
+.priorytet-wysoki { background: #fee2e2; color: #b91c1c; }
+.priorytet-krytyczny { background: #7f1d1d; color: #fff; }
+
+.xp { color: #8b5cf6; font-weight: bold; }
+.typ-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; background: #dbeafe; color: #1e40af; font-weight: bold; }
+.pusta { text-align: center; padding: 24px; color: #9ca3af; font-size: 13px; }
