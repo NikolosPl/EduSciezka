@@ -127,7 +127,7 @@ if (isset($_POST['akcja']) && $_POST['akcja'] == 'rejestracja') {
                 <input type="email" name="email" placeholder="jan@example.pl" required>
             </div>
             <div class="pole">
-                <label>Haslo (min. 6 znakow)</label>
+                <label>Haslo (min. 8 znakow)</label>
                 <input type="password" name="haslo" required>
             </div>
             <button type="submit" class="btn">Zarejestruj sie</button>
