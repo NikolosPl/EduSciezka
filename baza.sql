@@ -92,6 +92,24 @@ CREATE TABLE `logi_sukcesow` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `planer_przyszlosci`
+--
+
+CREATE TABLE `planer_przyszlosci` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `uzytkownik_id` int(10) UNSIGNED NOT NULL,
+  `etap` enum('szkola_koniec','studia','brak_studiow','praca','certyfikat_szkolenie') NOT NULL,
+  `tytul` varchar(150) NOT NULL,
+  `opis` text DEFAULT NULL,
+  `data_start` date NOT NULL,
+  `data_koniec` date DEFAULT NULL,
+  `status` enum('plan','w_toku','zakonczone') NOT NULL DEFAULT 'plan',
+  `utworzony_o` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `powiadomienia`
 --
 
@@ -283,7 +301,6 @@ ALTER TABLE `kategorie`
   ADD PRIMARY KEY (`id`),
   ADD KEY `uzytkownik_id` (`uzytkownik_id`);
 
---
 -- Indeksy dla tabeli `logi_sukcesow`
 --
 ALTER TABLE `logi_sukcesow`
@@ -293,6 +310,13 @@ ALTER TABLE `logi_sukcesow`
   ADD KEY `kamien_id` (`kamien_id`),
   ADD KEY `termin_id` (`termin_id`),
   ADD KEY `idx_logi_data` (`data_osiagniecia`);
+
+--
+-- Indeksy dla tabeli `planer_przyszlosci`
+--
+ALTER TABLE `planer_przyszlosci`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_planer_user_data` (`uzytkownik_id`,`data_start`);
 
 --
 -- Indeksy dla tabeli `powiadomienia`
@@ -379,10 +403,15 @@ ALTER TABLE `kamienie_milowe`
 ALTER TABLE `kategorie`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
---
 -- AUTO_INCREMENT for table `logi_sukcesow`
 --
 ALTER TABLE `logi_sukcesow`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `planer_przyszlosci`
+--
+ALTER TABLE `planer_przyszlosci`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -444,7 +473,6 @@ ALTER TABLE `kamienie_milowe`
 ALTER TABLE `kategorie`
   ADD CONSTRAINT `kategorie_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
 
---
 -- Constraints for table `logi_sukcesow`
 --
 ALTER TABLE `logi_sukcesow`
@@ -452,6 +480,12 @@ ALTER TABLE `logi_sukcesow`
   ADD CONSTRAINT `logi_sukcesow_ibfk_2` FOREIGN KEY (`zadanie_id`) REFERENCES `zadania` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `logi_sukcesow_ibfk_3` FOREIGN KEY (`kamien_id`) REFERENCES `kamienie_milowe` (`id`) ON DELETE SET NULL,
   ADD CONSTRAINT `logi_sukcesow_ibfk_4` FOREIGN KEY (`termin_id`) REFERENCES `terminy_szkolne` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `planer_przyszlosci`
+--
+ALTER TABLE `planer_przyszlosci`
+  ADD CONSTRAINT `planer_przyszlosci_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `powiadomienia`
