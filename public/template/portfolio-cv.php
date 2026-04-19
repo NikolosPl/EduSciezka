@@ -203,7 +203,7 @@ $drukuj = isset($_GET['print']) && $_GET['print'] === '1';
     <div class="page">
         <div class="top">
             <div>
-                <h1>Portfolio / CV</h1>
+                <h1>Portfolio i CV</h1>
                 <div><?php echo htmlspecialchars(trim($user['imie'] . ' ' . $user['nazwisko'])); ?></div>
                 <small><?php echo htmlspecialchars($user['email']); ?></small>
             </div>

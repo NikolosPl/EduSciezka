@@ -732,7 +732,7 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2>Auto portfolio / CV</h2>
+                <h2>Automatyczne portfolio i CV</h2>
             </div>
             <div class="cv-actions">
                 <a class="btn-dodaj" href="portfolio-cv.php" target="_blank" rel="noopener">Podglad portfolio/CV</a>
