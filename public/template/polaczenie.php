@@ -1,6 +1,6 @@
 <?php
 
-$polaczenie = mysqli_connect("localhost","root","","student_planner");
+$polaczenie = mysqli_connect("localhost","nikolospl_edusciezka","dmjf2eeo0opayrar","nikolospl_edusciezka");
 
 if (!$polaczenie) {
     die("Blad polaczenia: " . mysqli_connect_error());

@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+:root{
+    --primary: #2A95FF;
+    --secondary: #f1f8ff;
+    --white: #ffffff;
+    --shadow: rgb(204, 204, 204);
+    --span: #4aa4ff;
+}
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+.navigation{
+    position: fixed;
+    z-index: 100;
+    width: 100%;
+    padding: 20px 20px;
+    box-shadow: 0 5px 5px -2px var(--shadow);
+    background-color: var(--white);
+}
+
+.navigation ul{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    list-style-type: none;
+}
+
+.navigation li{
+    margin: 0 30px;
+}
+
+
+.navigation a{
+    display: block;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: 1.3em;
+    transition: .3s;
+    padding: 20px 0;
+}
+
+#nav-title-flex{
+    margin-right: auto;
+}
+
+#nav-title{
+    color: var(--primary);
+    font-size: 1.5em;
+}
+
+.navigation button{
+    font-weight: bold;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: .3s;
+}
+
+.navigation button:hover{
+    cursor: pointer;
+    background-color: var(--white);
+    color: var(--primary);
+    box-shadow: 0 0 5px var(--shadow);
+}
+
+.navigation a:hover{
+    cursor: pointer;
+    color: var(--primary);
+}
+
+/* contact info */
+
+.contact-info{
+    display: flex;
+    align-items: center;
+    padding: 5em 3em;
+    padding-top: 10em;
+}
+
+.contact-info-left, .contact-info-right{
+    width: 50%;
+    background-color: var(--secondary);
+    margin: 0 1em;
+    padding: 1em;
+    border-radius: 12px;
+    box-shadow: 0 0 5px var(--shadow);
+}
+
+/* contact info phonebook */
+
+.contact-info-left h2{
+    color: var(--primary);
+    text-align: center;
+}
+
+.contact-info-left p{
+    margin: 1em 0;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.contact-info-left span{
+    color: var(--span);
+}
+
+/* contact info form */
+
+.contact-info-right h2{
+    color: var(--primary);
+    text-align: center;
+}
+
+.contact-info-form label{
+    font-size: 1.1rem;
+}
+
+.line{
+    width: 200px;
+    height: 5px;
+    background-color: #c2e1ff;
+    margin: 0 auto;
+}
+
+.contact-info-form input, .contact-info-form textarea{
+    width: 100%;
+    margin: 1em 0;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--span);
+}
+
+.contact-info-form input:focus, .contact-info-form textarea:focus{
+    outline: 2px solid var(--primary);
+}
+
+.contact-info-form span{
+    color: rgb(233, 79, 79);
+}
+
+
+input[type="submit"]{
+    font-weight: bold;
+    background-color: var(--primary);
+    color: var(--white);
+    border: none;
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: .3s;
+}
+
+input[type="submit"]:hover{
+    cursor: pointer;
+    background-color: var(--white);
+    color: var(--primary);
+    box-shadow: 0 0 5px var(--shadow);
+}
+
+/* footer */
+
+footer{
+    display: flex;
+    padding: 3em;
+    margin-top: 3em;
+    width: 100%;
+    background-color: var(--secondary);
+    box-shadow: 0 0 5px var(--shadow);
+}
+
+.footer-right ul, .footer-left ul{
+    display: flex;
+    list-style-type: none;
+}
+
+.footer-left{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70%;
+    font-size: 1.3em;
+}
+
+.footer-left a{
+    display: block;
+    padding: 0 20px;
+    margin: 0 20px;
+    text-decoration: none;
+    color: black;
+    color: var(--span);
+    transition: .3s;
+}
+
+.footer-left h4{
+    color: var(--primary);
+    transition: .3s;
+}
+
+.footer-left a:hover{
+    color: var(--primary);
+}
+
+.footer-left h4:hover{
+    color: var(--span);
+}
+
+.footer-right{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 30%;
+}
+
+.footer-right svg{
+    width: 32px;
+    transition: .3s;
+}
+
+.footer-right a{
+    display: block;
+    padding: 0 20px;
+    margin: 0 20px;
+}
+
+.footer-right svg:hover{
+    transform: scale(1.1);
+}

@@ -16,3 +16,12 @@ W tym pliku zapisujemy najważniejsze zmiany w projekcie.
 - poradnik współtworzenia projektu
 - rejestr zmian projektu
 - licencję MIT
+
+## [1.1.0] - 2026-04-30
+
+### Dodano
+
+- dodanie strony jako aktualnej witryny
+- dodanie kontakt.html i kontakt-style.css
+- zmiana polaczenie.php
+- lekka poprawka w logowanie.php i menu-style.css

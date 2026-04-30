@@ -74,7 +74,7 @@ if (isset($_POST['akcja']) && $_POST['akcja'] == 'rejestracja') {
 
 
     <h2>
-        <a href="./index.html" class="return"><button class="return-button">Wróć na stronę główną</button></a>
+        <a href="../../index.html" class="return"><button class="return-button">Wróć na stronę główną</button></a>
     </h2>
     <div class="box">
         <div class="naglowek">
