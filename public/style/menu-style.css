@@ -298,7 +298,7 @@ footer{
     width: 30%;
 }
 
-.footer-right img{
+.footer-right svg{
     width: 32px;
     transition: .3s;
 }
@@ -309,7 +309,7 @@ footer{
     margin: 0 20px;
 }
 
-.footer-right img:hover{
+.footer-right svg:hover{
     transform: scale(1.1);
 }
 

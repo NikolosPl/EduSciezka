@@ -53,7 +53,7 @@ if (isset($_GET['ukoncz']) && is_numeric($_GET['ukoncz'])) {
     $wynik = mysqli_query($polaczenie, "SELECT id, tytul FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
     if (mysqli_num_rows($wynik) == 1) {
         $zad = mysqli_fetch_assoc($wynik);
-        mysqli_query($polaczenie, "UPDATE zadania SET status = 'zakonczone', data_ukonczenia = NOW() WHERE id = $zid");
+        mysqli_query($polaczenie, "UPDATE zadania SET status = 'zakonczone', ukonczone_o = NOW() WHERE id = $zid");
         $tytul_log = mysqli_real_escape_string($polaczenie, $zad['tytul']);
         mysqli_query($polaczenie, "INSERT INTO logi_sukcesow (uzytkownik_id, zadanie_id, tytul, typ, punkty_xp)
                                    VALUES ($uid, $zid, '$tytul_log', 'zadanie', 10)");
