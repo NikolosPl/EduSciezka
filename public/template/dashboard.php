@@ -136,17 +136,17 @@ $stat_logi = $r[0];
 
 <head>
     <meta charset="UTF-8">
-    <title>EduSciezka - Dashboard</title>
+    <title>EduŚcieżka - Dashboard</title>
     <link rel="stylesheet" href="../style/dashboard-style.css">
 </head>
 
 <body>
 
     <div class="pasek">
-        <div class="logo">EduSciezka</div>
+        <div class="logo">EduŚcieżka</div>
         <div>
             Witaj, <strong><?php echo htmlspecialchars($imie); ?></strong>
-            <a href="wyloguj.php">Wyloguj sie</a>
+            <a href="wyloguj.php">Wyloguj się</a>
         </div>
     </div>
 
@@ -154,7 +154,7 @@ $stat_logi = $r[0];
         <a href="dashboard.php" class="aktywny">Dashboard</a>
         <a href="logi.php">Log Sukcesu</a>
         <a href="projekty.php">Projekty</a>
-        <a href="planer-przyszlosci.php">Planer przyszlosci</a>
+        <a href="planer-przyszlosci.php">Planer przyszłości</a>
     </div>
 
     <div class="tresc">
@@ -183,7 +183,7 @@ $stat_logi = $r[0];
             </div>
             <div class="karta-stat zielona">
                 <div class="liczba"><?php echo $stat_ukonczone; ?></div>
-                <div class="etykieta">Ukonczone</div>
+                <div class="etykieta">Ukończone</div>
             </div>
             <div class="karta-stat fioletowa">
                 <div class="liczba"><?php echo $stat_logi; ?></div>
@@ -203,7 +203,7 @@ $stat_logi = $r[0];
                 <form method="POST">
                     <div class="rzad-pol">
                         <div class="pole">
-                            <label>Tytul *</label>
+                            <label>Tytuł *</label>
                             <input type="text" name="tytul" placeholder="np. Sprawdzian z matematyki" required>
                         </div>
                         <div class="pole">
@@ -225,7 +225,7 @@ $stat_logi = $r[0];
                             <label>Priorytet</label>
                             <select name="priorytet">
                                 <option value="niski">Niski</option>
-                                <option value="sredni" selected>Sredni</option>
+                                <option value="sredni" selected>Średni</option>
                                 <option value="wysoki">Wysoki</option>
                                 <option value="krytyczny">Krytyczny</option>
                             </select>
@@ -244,11 +244,11 @@ $stat_logi = $r[0];
 
             <div style="padding:0">
                 <?php if (mysqli_num_rows($wynik_zadan) == 0): ?>
-                    <div class="pusta-tabela">Brak zadan. Dodaj swoje pierwsze zadanie!</div>
+                    <div class="pusta-tabela">Brak zadań. Dodaj swoje pierwsze zadanie!</div>
                 <?php else: ?>
                     <table>
                         <tr>
-                            <th>Tytul</th>
+                            <th>Tytuł</th>
                             <th>Kategoria</th>
                             <th>Priorytet</th>
                             <th>Status</th>
@@ -302,10 +302,10 @@ $stat_logi = $r[0];
                                 <td>
                                     <?php if ($zad['status'] != 'zakonczone'): ?>
                                         <a href="dashboard.php?ukoncz=<?php echo $zad['id']; ?>" class="akcja akcja-ukoncz"
-                                            onclick="return confirm('Oznaczyc jako ukonczone?')">Ukoncz</a>
+                                            onclick="return confirm('Oznaczyc jako ukonczone?')">Ukończ</a>
                                     <?php endif; ?>
                                     <a href="dashboard.php?usun=<?php echo $zad['id']; ?>" class="akcja akcja-usun"
-                                        onclick="return confirm('Czy na pewno usunac to zadanie?')">Usun</a>
+                                        onclick="return confirm('Czy na pewno usunac to zadanie?')">Usuń</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -362,7 +362,7 @@ $stat_logi = $r[0];
 
             <div style="padding:0">
                 <?php if (mysqli_num_rows($wynik_terminow) == 0): ?>
-                    <div class="pusta-tabela">Brak terminow szkolnych.</div>
+                    <div class="pusta-tabela">Brak terminów szkolnych.</div>
                 <?php else: ?>
                     <table>
                         <tr>
@@ -390,7 +390,7 @@ $stat_logi = $r[0];
                                     <?php if ($ter['zaliczone']): ?>
                                         <span style="color:#065f46;font-size:12px;font-weight:bold">&#10003; Zaliczone</span>
                                     <?php else: ?>
-                                        <span style="color:#9ca3af;font-size:12px">Oczekujacy</span>
+                                        <span style="color:#9ca3af;font-size:12px">Oczekujący</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>
@@ -414,11 +414,11 @@ $stat_logi = $r[0];
             </div>
             <div style="padding:0">
                 <?php if (mysqli_num_rows($wynik_logow) == 0): ?>
-                    <div class="pusta-tabela">Brak logow sukcesu. Ukoncz zadanie, aby je dodac!</div>
+                    <div class="pusta-tabela">Brak logów sukcesu. Ukończ zadanie, aby je dodać!</div>
                 <?php else: ?>
                     <table>
                         <tr>
-                            <th>Tytul</th>
+                            <th>Tytuł</th>
                             <th>Typ</th>
                             <th>Punkty XP</th>
                             <th>Data</th>

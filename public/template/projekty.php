@@ -24,9 +24,9 @@ if (isset($_POST['dodaj_projekt'])) {
         $sql = "INSERT INTO projekty (uzytkownik_id, kategoria_id, nazwa, opis, data_start, deadline, priorytet)
                 VALUES ($uid, $kategoria_id, '$nazwa', '$opis', $ds, '$deadline', '$priorytet')";
         mysqli_query($polaczenie, $sql);
-        $komunikat = "sukces:Projekt zostal dodany!";
+        $komunikat = "sukces:Projekt został dodany!";
     } else {
-        $komunikat = "blad:Wypelnij nazwe i date!";
+        $komunikat = "blad:Wypełnij nazwę i datę!";
     }
 }
 
@@ -61,22 +61,22 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
 
 <head>
     <meta charset="UTF-8">
-    <title>EduSciezka - Projekty</title>
+    <title>EduŚcieżka - Projekty</title>
     <link rel="stylesheet" href="../style/projekty-style.css">
 </head>
 
 <body>
 
     <div class="pasek">
-        <div class="logo">EduSciezka</div>
-        <div>Witaj, <strong><?php echo htmlspecialchars($imie); ?></strong><a href="wyloguj.php">Wyloguj sie</a></div>
+        <div class="logo">EduŚcieżka</div>
+        <div>Witaj, <strong><?php echo htmlspecialchars($imie); ?></strong><a href="wyloguj.php">Wyloguj się</a></div>
     </div>
 
     <div class="menu">
         <a href="dashboard.php">Dashboard</a>
         <a href="logi.php">Log Sukcesu</a>
         <a href="projekty.php" class="aktywny">Projekty</a>
-        <a href="planer-przyszlosci.php">Planer przyszlosci</a>
+        <a href="planer-przyszlosci.php">Planer przyszłości</a>
     </div>
 
     <div class="tresc">
@@ -129,7 +129,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
                         <label>Priorytet</label>
                         <select name="priorytet">
                             <option value="niski">Niski</option>
-                            <option value="sredni" selected>Sredni</option>
+                            <option value="sredni" selected>Średni</option>
                             <option value="wysoki">Wysoki</option>
                             <option value="krytyczny">Krytyczny</option>
                         </select>
@@ -147,7 +147,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
         </div>
 
         <?php if (mysqli_num_rows($wynik_projektow) == 0): ?>
-            <div class="pusta">Brak projektow. Dodaj swoj pierwszy projekt!</div>
+            <div class="pusta">Brak projektów. Dodaj swój pierwszy projekt!</div>
         <?php else: ?>
             <div class="projekty-lista">
                 <?php while ($proj = mysqli_fetch_assoc($wynik_projektow)): ?>
@@ -187,17 +187,17 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
                         </div>
 
                         <div class="projekt-akcje">
-                            <span style="font-size:12px;color:#6b7280">Zmien status: </span>
+                            <span style="font-size:12px;color:#6b7280">Zmień status: </span>
                             <?php if ($s != 'w_toku'): ?>
                                 <a href="projekty.php?id=<?php echo $proj['id']; ?>&status=w_toku" class="a-w-toku">W toku</a>
                             <?php endif; ?>
                             <?php if ($s != 'zakończony'): ?>
                                 <a href="projekty.php?id=<?php echo $proj['id']; ?>&status=zakończony" class="a-zakonczony"
-                                    onclick="return confirm('Oznaczyc jako zakonczone?')">Zakoncz</a>
+                                    onclick="return confirm('Oznaczyc jako zakonczone?')">Zakończ</a>
                             <?php endif; ?>
                             <?php if ($s != 'porzucony'): ?>
                                 <a href="projekty.php?id=<?php echo $proj['id']; ?>&status=porzucony" class="a-porzucony"
-                                    onclick="return confirm('Oznaczyc jako porzucone?')">Porzuc</a>
+                                    onclick="return confirm('Oznaczyc jako porzucone?')">Porzuć</a>
                             <?php endif; ?>
                         </div>
                     </div>

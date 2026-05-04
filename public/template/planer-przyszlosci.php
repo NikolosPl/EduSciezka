@@ -140,10 +140,10 @@ if (isset($_POST['generuj_autoplan'])) {
         }
 
         if ($dodane > 0) {
-            header('Location: planer-przyszlosci.php?msg=sukces:Autoplan wygenerowal ' . $dodane . ' etapow.');
+            header('Location: planer-przyszlosci.php?msg=sukces: Autoplan wygenerował ' . $dodane . ' etapów.');
             exit;
         }
-        $komunikat = 'blad:Nie udalo sie wygenerowac autoplanu.';
+        $komunikat = 'błąd: Nie udało się wygenerować autoplanu.';
     }
 }
 
@@ -225,15 +225,15 @@ if (isset($_POST['dodaj_plan']) || isset($_POST['zapisz_edycje'])) {
     $data_koniec = isset($_POST['data_koniec']) ? mysqli_real_escape_string($polaczenie, $_POST['data_koniec']) : '';
 
     if (!in_array($etap, $etapy_dozwolone, true)) {
-        $komunikat = 'blad:Wybrano niepoprawny etap.';
+        $komunikat = 'błąd: Wybrano niepoprawny etap.';
     } elseif ($tytul === '') {
-        $komunikat = 'blad:Wpisz tytul etapu.';
+        $komunikat = 'błąd: Wpisz tytuł etapu.';
     } elseif (!poprawna_data($data_start)) {
-        $komunikat = 'blad:Podaj poprawna date startu.';
+        $komunikat = 'błąd: Podaj poprawną datę startu.';
     } elseif ($data_koniec !== '' && !poprawna_data($data_koniec)) {
-        $komunikat = 'blad:Podaj poprawna date konca albo zostaw puste.';
+        $komunikat = 'błąd: Podaj poprawną datę końca albo zostaw puste.';
     } elseif ($data_koniec !== '' && $data_koniec < $data_start) {
-        $komunikat = 'blad:Data konca nie moze byc wczesniejsza niz start.';
+        $komunikat = 'błąd: Data końca nie może być wcześniej niż data startu.';
     } else {
         $dk_sql = $data_koniec !== '' ? "'" . $data_koniec . "'" : 'NULL';
 
@@ -244,20 +244,20 @@ if (isset($_POST['dodaj_plan']) || isset($_POST['zapisz_edycje'])) {
                     WHERE id = $pid AND uzytkownik_id = $uid";
 
             if (mysqli_query($polaczenie, $sql)) {
-                header('Location: planer-przyszlosci.php?msg=sukces:Etap zostal zaktualizowany.');
+                header('Location: planer-przyszlosci.php?msg=sukces: Etap został zaktualizowany.');
                 exit;
             } else {
-                $komunikat = 'blad:Nie udalo sie zapisac zmian.';
+                $komunikat = 'błąd: Nie udało się zapisać zmian.';
             }
         } else {
             $sql = "INSERT INTO planer_przyszlosci (uzytkownik_id, etap, tytul, opis, data_start, data_koniec)
                     VALUES ($uid, '$etap', '$tytul', '$opis', '$data_start', $dk_sql)";
 
             if (mysqli_query($polaczenie, $sql)) {
-                header('Location: planer-przyszlosci.php?msg=sukces:Etap zostal dodany.');
+                header('Location: planer-przyszlosci.php?msg=sukces: Etap został dodany.');
                 exit;
             } else {
-                $komunikat = 'blad:Nie udalo sie dodac etapu.';
+                $komunikat = 'błąd: Nie udało się dodać etapu.';
             }
         }
     }
@@ -269,7 +269,7 @@ if (isset($_GET['zmien_status']) && is_numeric($_GET['zmien_status']) && isset($
 
     if (in_array($status, $statusy_dozwolone, true)) {
         mysqli_query($polaczenie, "UPDATE planer_przyszlosci SET status = '$status' WHERE id = $id AND uzytkownik_id = $uid");
-        header('Location: planer-przyszlosci.php?msg=sukces:Status etapu zostal zmieniony.');
+        header('Location: planer-przyszlosci.php?msg=sukces: Status etapu został zmieniony.');
         exit;
     }
 }
@@ -277,7 +277,7 @@ if (isset($_GET['zmien_status']) && is_numeric($_GET['zmien_status']) && isset($
 if (isset($_GET['usun']) && is_numeric($_GET['usun'])) {
     $id = (int) $_GET['usun'];
     mysqli_query($polaczenie, "DELETE FROM planer_przyszlosci WHERE id = $id AND uzytkownik_id = $uid");
-    header('Location: planer-przyszlosci.php?msg=sukces:Etap zostal usuniety.');
+    header('Location: planer-przyszlosci.php?msg=sukces: Etap został usunięty.');
     exit;
 }
 
@@ -370,7 +370,7 @@ if ($przeterminowane_etapy > 0) {
     $alarmy_ryzyka[] = array(
         'typ' => 'wysoki',
         'tytul' => 'Masz przeterminowane etapy planu: ' . $przeterminowane_etapy,
-        'akcja' => 'Przejrz statusy i przesun terminy lub zakoncz ukonczone etapy.'
+        'akcja' => 'Przejrzyj statusy i przesuń terminy lub zakończ ukończone etapy.'
     );
 }
 
@@ -381,7 +381,7 @@ if ($przeterminowane_zadania > 0) {
     $alarmy_ryzyka[] = array(
         'typ' => 'sredni',
         'tytul' => 'Zadania po terminie: ' . $przeterminowane_zadania,
-        'akcja' => 'Skup sie na zadaniach z najblizszym deadlinem i odblokuj zaleglosci.'
+        'akcja' => 'Skup się na zadaniach z najbliższym deadlinem i odblokuj zaległości.'
     );
 }
 
@@ -391,8 +391,8 @@ if ($bez_postepu > 0) {
     $risk_score += $bez_postepu * 5;
     $alarmy_ryzyka[] = array(
         'typ' => 'sredni',
-        'tytul' => 'Etapy bez postepu ponad 14 dni: ' . $bez_postepu,
-        'akcja' => 'Przelacz choc 1 etap na "w toku" i przypisz do niego najblizszy krok.'
+        'tytul' => 'Etapy bez postępu ponad 14 dni: ' . $bez_postepu,
+        'akcja' => 'Przełącz choć 1 etap na "w toku" i przypisz do niego najbliższy krok.'
     );
 }
 
@@ -421,16 +421,16 @@ if ($przeciazony_miesiac) {
     $risk_score += 16;
     $alarmy_ryzyka[] = array(
         'typ' => 'wysoki',
-        'tytul' => 'Przeciazony miesiac ' . $przeciazony_miesiac['miesiac'] . ': ' . $przeciazony_miesiac['ile'] . ' wydarzen',
-        'akcja' => 'Przesun mniej pilne elementy i zostaw max 8-9 kluczowych aktywnosci.'
+        'tytul' => 'Przeciążony miesiąc ' . $przeciazony_miesiac['miesiac'] . ': ' . $przeciazony_miesiac['ile'] . ' wydarzeń',
+        'akcja' => 'Przesuń mniej pilne elementy i zostaw max 8-9 kluczowych aktywności.'
     );
 }
 
 if (count($alarmy_ryzyka) === 0) {
     $alarmy_ryzyka[] = array(
         'typ' => 'niskie',
-        'tytul' => 'Brak krytycznych sygnalow ryzyka.',
-        'akcja' => 'Utrzymuj rytm: aktualizuj statusy i pilnuj tygodniowych priorytetow.'
+        'tytul' => 'Brak krytycznych sygnałów ryzyka.',
+        'akcja' => 'Utrzymuj rytm: aktualizuj statusy i pilnuj tygodniowych priorytetów.'
     );
 }
 
@@ -453,7 +453,7 @@ while ($row = mysqli_fetch_assoc($res_m_plan)) {
         'zrodlo' => 'Planer',
         'tytul' => $row['tytul'],
         'termin' => $data_docelowa,
-        'powod' => $dni < 0 ? 'Po terminie' : ($dni === 0 ? 'Dzis termin' : 'Najblizszy krok planu'),
+        'powod' => $dni < 0 ? 'Po terminie' : ($dni === 0 ? 'Dziś termin' : 'Najbliższy krok planu'),
         'score' => $score,
         'link' => 'planer-przyszlosci.php?edytuj=' . (int) $row['id']
     );
@@ -471,7 +471,7 @@ while ($row = mysqli_fetch_assoc($res_m_zad)) {
         'zrodlo' => 'Zadanie',
         'tytul' => $row['tytul'],
         'termin' => $termin,
-        'powod' => $dni < 0 ? 'Zalegle zadanie' : ($dni === 0 ? 'Deadline dzis' : 'Nadchodzacy deadline'),
+        'powod' => $dni < 0 ? 'Zaległe zadanie' : ($dni === 0 ? 'Deadline dziś' : 'Nadchodzący deadline'),
         'score' => $score,
         'link' => 'dashboard.php'
     );
@@ -489,7 +489,7 @@ while ($row = mysqli_fetch_assoc($res_m_ter)) {
         'zrodlo' => 'Termin',
         'tytul' => $row['przedmiot'],
         'termin' => $termin,
-        'powod' => $dni < 0 ? 'Termin szkolny miniony' : ($dni === 0 ? 'Termin dzis' : 'Nadchodzacy termin'),
+        'powod' => $dni < 0 ? 'Termin szkolny miniony' : ($dni === 0 ? 'Termin dziś' : 'Nadchodzący termin'),
         'score' => $score,
         'link' => 'dashboard.php'
     );
@@ -517,17 +517,17 @@ $etykiety_etapow = array(
 
 <head>
     <meta charset="UTF-8">
-    <title>EduSciezka - Planer przyszlosci</title>
+    <title>EduŚcieżka - Planer przyszlosci</title>
     <link rel="stylesheet" href="../style/planer-przyszlosci-style.css">
 </head>
 
 <body>
 
     <div class="pasek">
-        <div class="logo">EduSciezka</div>
+        <div class="logo">EduŚcieżka</div>
         <div>
             Witaj, <strong><?php echo htmlspecialchars($imie); ?></strong>
-            <a href="wyloguj.php">Wyloguj sie</a>
+            <a href="wyloguj.php">Wyloguj się</a>
         </div>
     </div>
 
@@ -535,7 +535,7 @@ $etykiety_etapow = array(
         <a href="dashboard.php">Dashboard</a>
         <a href="logi.php">Log Sukcesu</a>
         <a href="projekty.php">Projekty</a>
-        <a href="planer-przyszlosci.php" class="aktywny">Planer przyszlosci</a>
+        <a href="planer-przyszlosci.php" class="aktywny">Planer przyszłości</a>
     </div>
 
     <div class="tresc">
@@ -559,11 +559,11 @@ $etykiety_etapow = array(
             </div>
             <div class="karta-stat zielona">
                 <div class="liczba"><?php echo $stat_done; ?></div>
-                <div class="etykieta">Etapy zakonczone</div>
+                <div class="etykieta">Etapy zakończone</div>
             </div>
             <div class="karta-stat granatowa">
                 <div class="liczba"><?php echo $stat_study; ?></div>
-                <div class="etykieta">Plany studiow</div>
+                <div class="etykieta">Plany studiów</div>
             </div>
             <div class="karta-stat fioletowa">
                 <div class="liczba"><?php echo $stat_cert; ?></div>
@@ -577,22 +577,22 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2>Autoplan AI: generowanie realnego harmonogramu</h2>
+                <h2>Autoplan: generowanie realnego harmonogramu</h2>
             </div>
             <div class="formularz-dodaj">
                 <form method="POST">
                     <div class="rzad-pol">
                         <div class="pole">
-                            <label>Glowny cel *</label>
+                            <label>Główny cel *</label>
                             <input type="text" name="auto_cel"
-                                placeholder="np. Wejscie do branzy IT do konca przyszlego roku" required>
+                                placeholder="np. Wejście do branży IT do końca przyszłego roku" required>
                         </div>
                         <div class="pole">
-                            <label>Sciezka *</label>
+                            <label>Ścieżka *</label>
                             <select name="auto_sciezka" required>
                                 <option value="studia">Studia -> praca</option>
                                 <option value="praca">Praca od razu</option>
-                                <option value="gap">Gap year + rozwoj</option>
+                                <option value="gap">Gap year + rozwój</option>
                                 <option value="mieszana" selected>Mieszana (nauka + praca)</option>
                             </select>
                         </div>
@@ -614,7 +614,7 @@ $etykiety_etapow = array(
                         <label class="checkbox-line"><input type="checkbox" name="auto_certyfikat" value="1" checked>
                             Dodaj etap certyfikatu strategicznego</label>
                     </div>
-                    <button type="submit" name="generuj_autoplan" class="btn-dodaj">Generuj autoplan AI</button>
+                    <button type="submit" name="generuj_autoplan" class="btn-dodaj">Generuj autoplan</button>
                 </form>
             </div>
         </div>
@@ -635,11 +635,11 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2>Co robic dzis: 3 najwazniejsze kroki</h2>
+                <h2>Co robić dziś: 3 najważniejsze kroki</h2>
             </div>
             <div class="mission-wrap">
                 <?php if (count($misje_dnia) === 0): ?>
-                    <div class="pusta-tabela">Brak pilnych krokow na dzis. Mozesz zaplanowac nowe etapy.</div>
+                    <div class="pusta-tabela">Brak pilnych kroków na dziś. Możesz zaplanować nowe etapy.</div>
                 <?php else: ?>
                     <?php foreach ($misje_dnia as $misja): ?>
                         <div class="mission-item">
@@ -650,7 +650,7 @@ $etykiety_etapow = array(
                                     <?php echo htmlspecialchars(date('d.m.Y', strtotime($misja['termin']))); ?>
                                 </div>
                             </div>
-                            <a href="<?php echo htmlspecialchars($misja['link']); ?>" class="btn-mission">Otworz</a>
+                            <a href="<?php echo htmlspecialchars($misja['link']); ?>" class="btn-mission">Otwórz</a>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -659,7 +659,7 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2>Symulator sciezek zycia</h2>
+                <h2>Symulator ścieżek życia</h2>
             </div>
             <div class="formularz-dodaj">
                 <form method="POST">
@@ -669,11 +669,11 @@ $etykiety_etapow = array(
                             <input type="number" name="sim_horyzont_lat" min="2" max="10" value="5">
                         </div>
                         <div class="pole">
-                            <label>Lata studiow</label>
+                            <label>Lata studiów</label>
                             <input type="number" name="sim_lata_studiow" min="1" max="6" value="3">
                         </div>
                         <div class="pole">
-                            <label>Koszt studiow / miesiac (PLN)</label>
+                            <label>Koszt studiów / miesiąc (PLN)</label>
                             <input type="number" name="sim_koszt_studia_msc" min="0" step="50" value="1200">
                         </div>
                     </div>
@@ -701,7 +701,7 @@ $etykiety_etapow = array(
                             <input type="number" name="sim_wzrost_praca" min="0" max="100" step="0.5" value="5">
                         </div>
                     </div>
-                    <button type="submit" name="licz_symulacje" class="btn-dodaj">Porownaj scenariusze</button>
+                    <button type="submit" name="licz_symulacje" class="btn-dodaj">Porównaj scenariusze</button>
                 </form>
 
                 <?php if ($symulacja): ?>
@@ -711,10 +711,10 @@ $etykiety_etapow = array(
                         </div>
                         <table>
                             <tr>
-                                <th>Sciezka</th>
+                                <th>Ścieżka</th>
                                 <th>Bilans finansowy (PLN)</th>
                                 <th>Ryzyko</th>
-                                <th>Czas do regularnego dochodu</th>
+                                <th>Czas do uzyskania regularnych dochodów</th>
                             </tr>
                             <?php foreach ($symulacja['scenariusze'] as $s): ?>
                                 <tr>
@@ -735,7 +735,7 @@ $etykiety_etapow = array(
                 <h2>Automatyczne portfolio i CV</h2>
             </div>
             <div class="cv-actions">
-                <a class="btn-dodaj" href="portfolio-cv.php" target="_blank" rel="noopener">Podglad portfolio/CV</a>
+                <a class="btn-dodaj" href="portfolio-cv.php" target="_blank" rel="noopener">Podgląd portfolio/CV</a>
                 <a class="btn-drugi" href="portfolio-cv.php?print=1" target="_blank" rel="noopener">Pobierz PDF
                     (drukuj)</a>
             </div>
@@ -743,7 +743,7 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2><?php echo $plan_do_edycji ? 'Edytuj etap przyszlosci' : 'Dodaj etap przyszlosci'; ?></h2>
+                <h2><?php echo $plan_do_edycji ? 'Edytuj etap przyszłości' : 'Dodaj etap przyszłości'; ?></h2>
             </div>
 
             <div class="formularz-dodaj widoczny">
@@ -755,10 +755,10 @@ $etykiety_etapow = array(
                         <div class="pole">
                             <label>Etap *</label>
                             <select name="etap" required>
-                                <option value="szkola_koniec" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'szkola_koniec') ? 'selected' : ''; ?>>Skonczenie szkoly
+                                <option value="szkola_koniec" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'szkola_koniec') ? 'selected' : ''; ?>>Skończenie szkoły
                                 </option>
                                 <option value="studia" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'studia') ? 'selected' : ''; ?>>Studia</option>
-                                <option value="brak_studiow" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'brak_studiow') ? 'selected' : ''; ?>>Brak studiow
+                                <option value="brak_studiow" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'brak_studiow') ? 'selected' : ''; ?>>Brak studiów
                                 </option>
                                 <option value="praca" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'praca') ? 'selected' : ''; ?>>Praca</option>
                                 <option value="certyfikat_szkolenie" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'certyfikat_szkolenie') ? 'selected' : ''; ?>>Certyfikat /
@@ -766,7 +766,7 @@ $etykiety_etapow = array(
                             </select>
                         </div>
                         <div class="pole">
-                            <label>Tytul etapu *</label>
+                            <label>Tytuł etapu *</label>
                             <input type="text" name="tytul" placeholder="np. Matura i koniec liceum"
                                 value="<?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['tytul']) : ''; ?>"
                                 required>
@@ -781,7 +781,7 @@ $etykiety_etapow = array(
                                 required>
                         </div>
                         <div class="pole">
-                            <label>Data konca (opcjonalnie)</label>
+                            <label>Data końca (opcjonalnie)</label>
                             <input type="date" name="data_koniec"
                                 value="<?php echo ($plan_do_edycji && $plan_do_edycji['data_koniec']) ? htmlspecialchars($plan_do_edycji['data_koniec']) : ''; ?>">
                         </div>
@@ -807,16 +807,16 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2>Twoj plan przyszlosci</h2>
+                <h2>Twój plan przyszłości</h2>
             </div>
             <div style="padding:0">
                 <?php if (!$wynik_planera || mysqli_num_rows($wynik_planera) == 0): ?>
-                    <div class="pusta-tabela">Brak etapow. Dodaj pierwszy krok i rozpisz swoja sciezke.</div>
+                    <div class="pusta-tabela">Brak etapów. Dodaj pierwszy krok i rozpisz swoją ścieżkę.</div>
                 <?php else: ?>
                     <table>
                         <tr>
                             <th>Etap</th>
-                            <th>Tytul</th>
+                            <th>Tytuł</th>
                             <th>Termin</th>
                             <th>Status</th>
                             <th>Akcje</th>
@@ -858,14 +858,14 @@ $etykiety_etapow = array(
                                     <?php endif; ?>
                                     <?php if ($plan['status'] != 'zakonczone'): ?>
                                         <a class="akcja akcja-zakoncz"
-                                            href="planer-przyszlosci.php?zmien_status=<?php echo $plan['id']; ?>&status=zakonczone">Zakoncz</a>
+                                            href="planer-przyszlosci.php?zmien_status=<?php echo $plan['id']; ?>&status=zakonczone">Zakończ</a>
                                     <?php endif; ?>
                                     <?php if ($plan['status'] != 'plan'): ?>
                                         <a class="akcja akcja-plan"
                                             href="planer-przyszlosci.php?zmien_status=<?php echo $plan['id']; ?>&status=plan">Plan</a>
                                     <?php endif; ?>
                                     <a class="akcja akcja-usun" href="planer-przyszlosci.php?usun=<?php echo $plan['id']; ?>"
-                                        onclick="return confirm('Usunac ten etap?')">Usun</a>
+                                        onclick="return confirm('Usunac ten etap?')">Usuń</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -876,7 +876,7 @@ $etykiety_etapow = array(
 
         <div class="sekcja">
             <div class="sekcja-naglowek kalendarz-top">
-                <h2>Kalendarz planu, zadan i terminow</h2>
+                <h2>Kalendarz planu, zadań i terminów</h2>
                 <div class="kalendarz-sterowanie">
                     <button type="button" id="prevMonth" class="btn-nav">&lt;</button>
                     <strong id="monthLabel"></strong>
@@ -885,14 +885,14 @@ $etykiety_etapow = array(
             </div>
 
             <div class="filtry-kalendarza">
-                <label><input type="checkbox" id="filtr-planer" checked> Planer przyszlosci</label>
+                <label><input type="checkbox" id="filtr-planer" checked> Planer przyszłości</label>
                 <label><input type="checkbox" id="filtr-zadanie" checked> Zadania</label>
                 <label><input type="checkbox" id="filtr-termin" checked> Terminy szkolne</label>
-                <label><input type="checkbox" id="filtr-zakonczone" checked> Pokaz zakonczone</label>
+                <label><input type="checkbox" id="filtr-zakonczone" checked> Pokaż zakończone</label>
             </div>
 
             <div class="legend">
-                <span class="legend-item legend-planer">Planer przyszlosci</span>
+                <span class="legend-item legend-planer">Planer przyszłości</span>
                 <span class="legend-item legend-zadanie">Zadanie</span>
                 <span class="legend-item legend-termin">Termin szkolny</span>
             </div>
@@ -904,8 +904,8 @@ $etykiety_etapow = array(
     <script>
         const wydarzenia = <?php echo $kalendarz_json ? $kalendarz_json : '[]'; ?>;
         const nazwyMiesiecy = [
-            'Styczen', 'Luty', 'Marzec', 'Kwiecien', 'Maj', 'Czerwiec',
-            'Lipiec', 'Sierpien', 'Wrzesien', 'Pazdziernik', 'Listopad', 'Grudzien'
+            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
+            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
         ];
 
         let widok = new Date();
@@ -944,7 +944,7 @@ $etykiety_etapow = array(
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
 
-            ['Pon', 'Wt', 'Sr', 'Czw', 'Pt', 'Sob', 'Niedz'].forEach(function (dzien) {
+            ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Niedż'].forEach(function (dzien) {
                 const nag = document.createElement('div');
                 nag.className = 'dow';
                 nag.textContent = dzien;

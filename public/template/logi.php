@@ -24,49 +24,49 @@ $liczba_logow = mysqli_num_rows($wynik);
 
 <head>
     <meta charset="UTF-8">
-    <title>EduSciezka - Log Sukcesu</title>
+    <title>EduŚcieżka - Log Sukcesu</title>
     <link rel="stylesheet" href="../style/logi-style.css">
 </head>
 
 <body>
 
     <div class="pasek">
-        <div class="logo">EduSciezka</div>
-        <div>Witaj, <strong><?php echo htmlspecialchars($imie); ?></strong><a href="wyloguj.php">Wyloguj sie</a></div>
+        <div class="logo">EduŚcieżka</div>
+        <div>Witaj, <strong><?php echo htmlspecialchars($imie); ?></strong><a href="wyloguj.php">Wyloguj się</a></div>
     </div>
 
     <div class="menu">
         <a href="dashboard.php">Dashboard</a>
         <a href="logi.php" class="aktywny">Log Sukcesu</a>
         <a href="projekty.php">Projekty</a>
-        <a href="planer-przyszlosci.php">Planer przyszlosci</a>
+        <a href="planer-przyszlosci.php">Planer przyszłości</a>
     </div>
 
     <div class="tresc">
         <div class="statystyki">
             <div class="karta-stat">
                 <div class="liczba"><?php echo $liczba_logow; ?></div>
-                <div class="etykieta">Wszystkich sukcesow</div>
+                <div class="etykieta">Wszystkich sukcesów</div>
             </div>
             <div class="karta-stat">
                 <div class="liczba"><?php echo $suma_xp; ?></div>
-                <div class="etykieta">Lacznie punktow XP</div>
+                <div class="etykieta">Łącznie punktów XP</div>
             </div>
         </div>
 
         <div class="sekcja">
             <div class="sekcja-naglowek">
-                <h2>Historia Sukcesow</h2>
+                <h2>Historia Sukcesów</h2>
             </div>
             <?php if ($liczba_logow == 0): ?>
-                <div class="pusta">Brak logow sukcesu. Ukoncz zadanie lub termin, aby cos tu pojawilo!</div>
+                <div class="pusta">Brak logów sukcesu. Ukończ zadanie lub termin, aby coś się tu pojawiło!</div>
             <?php else: ?>
                 <table>
                     <tr>
-                        <th>Tytul sukcesu</th>
+                        <th>Tytuł sukcesu</th>
                         <th>Typ</th>
                         <th>Punkty XP</th>
-                        <th>Data osiagniecia</th>
+                        <th>Data osiągnięcia</th>
                     </tr>
                     <?php while ($log = mysqli_fetch_assoc($wynik)): ?>
                         <tr>
