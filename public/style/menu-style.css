@@ -147,9 +147,7 @@ h1{
 }
 
 .hero-img-right img{
-    width: 80%;
-    border-radius: 12px;
-    box-shadow: 0 0 5px var(--shadow);
+    width: 60%;
 }
 
 /* cards */

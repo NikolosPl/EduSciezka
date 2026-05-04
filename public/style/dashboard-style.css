@@ -1,23 +1,84 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, sans-serif; background: #f3f4f6; color: #333; }
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+:root{
+    --primary: #2A95FF;
+    --secondary: #f1f8ff;
+    --white: #ffffff;
+    --shadow: rgb(204, 204, 204);
+    --span: #4aa4ff;
+}
+
+*{ 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+    font-family: "Source Sans 3", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
 
 .pasek {
-    background: #2563EB; color: #fff;
-    padding: 0 20px; height: 54px;
-    display: flex; align-items: center; justify-content: space-between;
+    background-color: var(--primary); 
+    color: white;
+    padding: 1em 1.5em; 
+    display: flex; align-items: center;
+    justify-content: space-between;
 }
-.pasek .logo { font-size: 20px; font-weight: bold; }
-.pasek a { color: #fff; text-decoration: none; margin-left: 16px; font-size: 13px; }
-.pasek a:hover { text-decoration: underline; }
+.pasek .logo {
+    font-size: 1.4rem; 
+    font-weight: bold; 
+}
+.pasek a { 
+    color: var(--secondary); 
+    text-decoration: none; 
+    margin-left: 1em; 
+    font-size: 1rem; 
+    transition: .3s;
+}
+.pasek a:hover { 
+    color: #b13232; 
+}
 
-.menu { background: #1e3a8a; display: flex; padding: 0 20px; }
-.menu a { color: rgba(255,255,255,0.75); text-decoration: none; padding: 10px 14px; font-size: 14px; }
-.menu a:hover, .menu a.aktywny { color: #fff; background: rgba(255,255,255,0.1); }
+.menu { 
+    background-color: #1D3A76; 
+    display: flex; 
+    padding: 0 1em;
+ }
+.menu a {
+    color: var(--secondary); 
+    text-decoration: none; 
+    padding: 1em 1.5em; 
+    font-size: .8rem; 
+}
+.menu a:hover, .menu a.aktywny { 
+    color: white; 
+    background-color: #2c54a580; 
+}
 
-.tresc { padding: 20px; max-width: 1100px; margin: 0 auto; }
+.tresc { 
+    padding: 1em; 
+    max-width: 1100px; 
+    margin: 0 auto; 
+}
 
-.kom-sukces { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
-.kom-blad { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 10px 14px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+.kom-sukces { 
+    background: #d1fae5; 
+    color: #065f46; 
+    border: 1px solid #6ee7b7; 
+    padding: 10px 14px; 
+    border-radius: 6px; 
+    margin-bottom: 16px; 
+    font-size: 14px; 
+}
+.kom-blad { 
+    background: #fee2e2; 
+    color: #b91c1c; 
+    border: 1px solid #fca5a5; 
+    padding: 10px 14px; 
+    border-radius: 6px; 
+    margin-bottom: 16px; 
+    font-size: 14px; 
+}
 
 .statystyki { display: flex; gap: 14px; margin-bottom: 20px; flex-wrap: wrap; }
 .karta-stat {
