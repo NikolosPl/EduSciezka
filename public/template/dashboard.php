@@ -11,17 +11,25 @@ $imie = $_SESSION['imie'];
 
 $komunikat = "";
 
+// Dodaj brakującą kolumnę dla daty startowej, jeśli baza ma starszy schemat
+$kolumna_data_start = mysqli_query($polaczenie, "SHOW COLUMNS FROM zadania LIKE 'data_start'");
+if ($kolumna_data_start && mysqli_num_rows($kolumna_data_start) == 0) {
+    mysqli_query($polaczenie, "ALTER TABLE zadania ADD COLUMN data_start date DEFAULT NULL AFTER opis");
+}
+
 // Dodaj zadanie
 if (isset($_POST['dodaj_zadanie'])) {
     $tytul = mysqli_real_escape_string($polaczenie, $_POST['tytul']);
     $opis = mysqli_real_escape_string($polaczenie, $_POST['opis']);
+    $data_start = mysqli_real_escape_string($polaczenie, $_POST['data_start'] ?? '');
     $deadline = mysqli_real_escape_string($polaczenie, $_POST['deadline']);
     $priorytet = mysqli_real_escape_string($polaczenie, $_POST['priorytet']);
     $kategoria_id = (int) $_POST['kategoria_id'];
 
     if ($tytul != "" && $deadline != "") {
-        $sql = "INSERT INTO zadania (uzytkownik_id, kategoria_id, tytul, opis, deadline, priorytet)
-                VALUES ($uid, $kategoria_id, '$tytul', '$opis', '$deadline', '$priorytet')";
+        $data_start_sql = $data_start != "" ? "'$data_start'" : "NULL";
+        $sql = "INSERT INTO zadania (uzytkownik_id, kategoria_id, tytul, opis, data_start, deadline, priorytet)
+                VALUES ($uid, $kategoria_id, '$tytul', '$opis', $data_start_sql, '$deadline', '$priorytet')";
         mysqli_query($polaczenie, $sql);
         $komunikat = "sukces: Zadanie zostało dodane!";
     } else {
@@ -62,6 +70,17 @@ if (isset($_GET['ukoncz']) && is_numeric($_GET['ukoncz'])) {
     }
 }
 
+// Przestaw zadanie na "w toku"
+if (isset($_GET['w_toku']) && is_numeric($_GET['w_toku'])) {
+    $zid = (int) $_GET['w_toku'];
+    $wynik = mysqli_query($polaczenie, "SELECT id FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
+    if (mysqli_num_rows($wynik) == 1) {
+        mysqli_query($polaczenie, "UPDATE zadania SET status = 'w_toku' WHERE id = $zid AND status <> 'zakończone'");
+        header("Location: dashboard.php?msg=sukces: Zadanie oznaczone jako w toku.");
+        exit;
+    }
+}
+
 // Usun zadanie
 if (isset($_GET['usun']) && is_numeric($_GET['usun'])) {
     $zid = (int) $_GET['usun'];
@@ -87,6 +106,17 @@ if (isset($_GET['zalicz_termin']) && is_numeric($_GET['zalicz_termin'])) {
 
 if (isset($_GET['msg']))
     $komunikat = $_GET['msg'];
+
+// Automatycznie startuj zadania, gdy nadejdzie data startowa
+mysqli_query(
+    $polaczenie,
+    "UPDATE zadania
+         SET status = 'w_toku'
+         WHERE uzytkownik_id = $uid
+             AND status = 'do_zrobienia'
+             AND data_start IS NOT NULL
+             AND data_start <= CURDATE()"
+);
 
 // Pobierz zadania
 $wynik_zadan = mysqli_query(
@@ -208,6 +238,10 @@ $stat_logi = $r[0];
                             <input type="text" name="tytul" placeholder="np. Sprawdzian z matematyki" required>
                         </div>
                         <div class="pole">
+                            <label>Data startowa</label>
+                            <input type="date" name="data_start">
+                        </div>
+                        <div class="pole">
                             <label>Deadline <span class="req">*</span></label>
                             <input type="datetime-local" name="deadline" required>
                         </div>
@@ -253,18 +287,19 @@ $stat_logi = $r[0];
                             <th>Kategoria</th>
                             <th>Priorytet</th>
                             <th>Status</th>
+                            <th>Start</th>
                             <th>Deadline</th>
                             <th>Akcje</th>
                         </tr>
                         <?php while ($zad = mysqli_fetch_assoc($wynik_zadan)): ?>
                             <?php
-                            $klasy_priorytetu = ['niski'=>'niski','średni'=>'sredni','wysoki'=>'wysoki','krytyczny'=>'krytyczny'];
+                            $klasy_priorytetu = ['niski' => 'niski', 'średni' => 'sredni', 'wysoki' => 'wysoki', 'krytyczny' => 'krytyczny'];
                             $klasa = isset($klasy_priorytetu[$zad['priorytet']]) ? $klasy_priorytetu[$zad['priorytet']] : 'niski';
 
                             $klasy_statusow = [
-                            'do_zrobienia' => 'do_zrobienia',
-                            'w_toku'       => 'w_toku',
-                            'zakończone'   => 'zakonczone',
+                                'do_zrobienia' => 'do_zrobienia',
+                                'w_toku' => 'w_toku',
+                                'zakończone' => 'zakonczone',
                             ];
                             $klasa_statusu = isset($klasy_statusow[$zad['status']]) ? $klasy_statusow[$zad['status']] : $zad['status'];
                             ?>
@@ -281,7 +316,8 @@ $stat_logi = $r[0];
                                         <span class="kropka-kategorii" style="background:<?php echo $zad['kolor_hex']; ?>"></span>
                                         <?php echo htmlspecialchars($zad['kategoria_nazwa']); ?>
                                     <?php else:
-                                        echo '—'; endif; ?>
+                                        echo '—';
+                                    endif; ?>
                                 </td>
                                 <td>
                                     <span class="priorytet priorytet-<?php echo $klasa; ?>">
@@ -295,6 +331,11 @@ $stat_logi = $r[0];
                                         echo isset($statusy[$zad['status']]) ? $statusy[$zad['status']] : $zad['status'];
                                         ?>
                                     </span>
+                                </td>
+                                <td style="font-size:12px;color:#6b7280">
+                                    <?php
+                                    echo $zad['data_start'] ? date('d.m.Y', strtotime($zad['data_start'])) : '—';
+                                    ?>
                                 </td>
                                 <td style="font-size:12px;color:#6b7280">
                                     <?php
@@ -313,9 +354,13 @@ $stat_logi = $r[0];
                                 </td>
                                 <td>
                                     <?php if ($zad['status'] != 'zakończone'): ?>
+                                        <?php if ($zad['status'] == 'do_zrobienia'): ?>
+                                            <a href="dashboard.php?w_toku=<?php echo $zad['id']; ?>" class="akcja akcja-ukoncz"
+                                                onclick="return confirm('Oznaczyć jako w toku?')">W toku</a>
+                                        <?php endif; ?>
                                         <a href="dashboard.php?ukoncz=<?php echo $zad['id']; ?>" class="akcja akcja-ukoncz"
                                             onclick="return confirm('Oznaczyć jako ukończone?')">Ukończ</a>
-                                            <a href="dashboard.php?usun=<?php echo $zad['id']; ?>" class="akcja akcja-usun"
+                                        <a href="dashboard.php?usun=<?php echo $zad['id']; ?>" class="akcja akcja-usun"
                                             onclick="return confirm('Czy na pewno usunąć to zadanie?')">Usuń</a>
                                     <?php endif; ?>
                                 </td>
@@ -395,9 +440,11 @@ $stat_logi = $r[0];
                                 </td>
                                 <td><span class="typ-terminu"><?php echo htmlspecialchars($ter['typ']); ?></span></td>
                                 <td style="font-size:12px">
-                                    <?php echo htmlspecialchars($ter['nauczyciel'] ? $ter['nauczyciel'] : '—'); ?></td>
+                                    <?php echo htmlspecialchars($ter['nauczyciel'] ? $ter['nauczyciel'] : '—'); ?>
+                                </td>
                                 <td style="font-size:12px;color:#6b7280">
-                                    <?php echo date('d.m.Y H:i', strtotime($ter['data_termin'])); ?></td>
+                                    <?php echo date('d.m.Y H:i', strtotime($ter['data_termin'])); ?>
+                                </td>
                                 <td>
                                     <?php if ($ter['zaliczone']): ?>
                                         <span style="color:#065f46;font-size:12px;font-weight:bold">&#10003; Zaliczone</span>
@@ -441,7 +488,8 @@ $stat_logi = $r[0];
                                 <td><span class="typ-badge"><?php echo $log['typ']; ?></span></td>
                                 <td class="xp">+<?php echo $log['punkty_xp']; ?> XP</td>
                                 <td style="font-size:12px;color:#6b7280">
-                                    <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?></td>
+                                    <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?>
+                                </td>
                             </tr>
                         <?php endwhile; ?>
                     </table>

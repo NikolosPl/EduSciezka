@@ -175,6 +175,18 @@ CREATE TABLE `sesje` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `system_meta`
+--
+
+CREATE TABLE `system_meta` (
+  `klucz` varchar(100) NOT NULL,
+  `wartosc` text DEFAULT NULL,
+  `zaktualizowano_o` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `terminy_szkolne`
 --
 
@@ -252,6 +264,7 @@ CREATE TABLE `zadania` (
   `kategoria_id` int(10) UNSIGNED DEFAULT NULL,
   `tytul` varchar(200) NOT NULL,
   `opis` text DEFAULT NULL,
+  `data_start` date DEFAULT NULL,
   `deadline` datetime NOT NULL,
   `czas_szacowany` smallint(5) UNSIGNED DEFAULT NULL,
   `priorytet` enum('niski','sredni','wysoki','krytyczny') NOT NULL DEFAULT 'sredni',
@@ -263,13 +276,17 @@ CREATE TABLE `zadania` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
+-- Dodanie kolumny daty startowej do tabeli `zadania`
+--
+
+--
 -- Dumping data for table `zadania`
 --
 
-INSERT INTO `zadania` (`id`, `uzytkownik_id`, `projekt_id`, `kategoria_id`, `tytul`, `opis`, `deadline`, `czas_szacowany`, `priorytet`, `status`, `ukonczone_o`, `powtarzalne`, `regula_powtorzen`, `utworzony_o`) VALUES
-(1, 1, 1, 2, 'Zaprojektuj strukturę repozytoriów', NULL, '2025-04-10 23:59:00', NULL, 'sredni', 'do_zrobienia', NULL, 0, NULL, '2026-03-14 18:22:54'),
-(2, 1, 1, 2, 'Ukończ projekt nr 1 – kalkulator', NULL, '2025-04-30 23:59:00', NULL, 'wysoki', 'do_zrobienia', NULL, 0, NULL, '2026-03-14 18:22:54'),
-(3, 1, 1, 2, 'Napisz README dla każdego projektu', NULL, '2025-05-15 23:59:00', NULL, 'niski', 'do_zrobienia', NULL, 0, NULL, '2026-03-14 18:22:54');
+INSERT INTO `zadania` (`id`, `uzytkownik_id`, `projekt_id`, `kategoria_id`, `tytul`, `opis`, `data_start`, `deadline`, `czas_szacowany`, `priorytet`, `status`, `ukonczone_o`, `powtarzalne`, `regula_powtorzen`, `utworzony_o`) VALUES
+(1, 1, 1, 2, 'Zaprojektuj strukturę repozytoriów', NULL, NULL, '2025-04-10 23:59:00', NULL, 'sredni', 'do_zrobienia', NULL, 0, NULL, '2026-03-14 18:22:54'),
+(2, 1, 1, 2, 'Ukończ projekt nr 1 – kalkulator', NULL, NULL, '2025-04-30 23:59:00', NULL, 'wysoki', 'do_zrobienia', NULL, 0, NULL, '2026-03-14 18:22:54'),
+(3, 1, 1, 2, 'Napisz README dla każdego projektu', NULL, NULL, '2025-05-15 23:59:00', NULL, 'niski', 'do_zrobienia', NULL, 0, NULL, '2026-03-14 18:22:54');
 
 -- --------------------------------------------------------
 
@@ -347,6 +364,12 @@ ALTER TABLE `sesje`
   ADD KEY `uzytkownik_id` (`uzytkownik_id`);
 
 --
+-- Indeksy dla tabeli `system_meta`
+--
+ALTER TABLE `system_meta`
+  ADD PRIMARY KEY (`klucz`);
+
+--
 -- Indeksy dla tabeli `terminy_szkolne`
 --
 ALTER TABLE `terminy_szkolne`
@@ -377,6 +400,7 @@ ALTER TABLE `zadania`
   ADD KEY `uzytkownik_id` (`uzytkownik_id`),
   ADD KEY `projekt_id` (`projekt_id`),
   ADD KEY `kategoria_id` (`kategoria_id`),
+  ADD KEY `idx_zadania_data_start` (`data_start`),
   ADD KEY `idx_zadania_deadline` (`deadline`),
   ADD KEY `idx_zadania_status` (`status`);
 
