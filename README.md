@@ -42,6 +42,8 @@ EduSciezka/
 3. Uruchom projekt przez lokalny serwer, np. XAMPP.
 4. Otwórz ekran logowania przez [public/template/logowanie.php](public/template/logowanie.php).
 
+Po uruchomieniu aplikacja codziennie synchronizuje strukturę bazy z [baza.sql](baza.sql), więc nie trzeba ponownie usuwać i importować całej bazy przy zmianach schematu.
+
 ## Dokumentacja i pliki pomocnicze
 
 Jeśli chcesz wejść głębiej w szczegóły, zajrzyj do [docs/README.md](docs/README.md).
@@ -65,4 +67,4 @@ Jeśli chcesz wejść głębiej w szczegóły, zajrzyj do [docs/README.md](docs/
 
 - aktywnie rozwijany
 - działa bez zewnętrznych integracji Google Calendar
-- po imporcie bazy jest gotowy do uruchomienia lokalnie
+- po pierwszym imporcie bazy i uruchomieniu aplikacji sam aktualizuje strukturę schematu

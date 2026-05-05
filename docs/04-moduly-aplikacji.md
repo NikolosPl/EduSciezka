@@ -53,6 +53,9 @@ Funkcja:
 - terminy szkolne
 - statystyki postępów
 - szybki podgląd logów sukcesu
+- obsługa daty startowej zadań
+- automatyczne przełączanie zadania na "w toku" po nadejściu dnia startu
+- ręczna zmiana statusu zadania na "w toku"
 
 ## 4. Projekty
 

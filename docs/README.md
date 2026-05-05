@@ -32,6 +32,7 @@ Ten katalog zbiera bardziej szczegółowy opis projektu. Główny README daje sz
 1. Zacznij od [Opisu projektu](01-opis-projektu.md), jeśli chcesz szybko złapać sens aplikacji.
 2. Przejdź do [Architektury aplikacji](02-architektura-aplikacji.md), jeśli interesuje Cię podział warstw i przepływ działania.
 3. Otwórz [Bazę danych](03-baza-danych.md), jeśli pracujesz nad schematem SQL albo importem danych.
-4. Skorzystaj z [Modułów aplikacji](04-moduly-aplikacji.md), jeśli chcesz opisać konkretne ekrany.
-5. Sprawdź [Uruchomienie i konfigurację](05-uruchomienie-i-konfiguracja.md), jeśli stawiasz projekt lokalnie.
-6. Na końcu zajrzyj do [zrzutów ekranu](06-screenshots.md), jeśli chcesz przygotować repo pod prezentację.
+4. Jeśli zmieniasz strukturę tabel, sprawdź też opis dziennego syncu schematu w [Bazie danych](03-baza-danych.md) i [Uruchomieniu i konfiguracji](05-uruchomienie-i-konfiguracja.md).
+5. Skorzystaj z [Modułów aplikacji](04-moduly-aplikacji.md), jeśli chcesz opisać konkretne ekrany.
+6. Sprawdź [Uruchomienie i konfigurację](05-uruchomienie-i-konfiguracja.md), jeśli stawiasz projekt lokalnie.
+7. Na końcu zajrzyj do [zrzutów ekranu](06-screenshots.md), jeśli chcesz przygotować repo pod prezentację.

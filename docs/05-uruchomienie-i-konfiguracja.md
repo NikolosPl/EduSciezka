@@ -26,6 +26,8 @@
 4. Sprawdź konfigurację połączenia w `public/template/polaczenie.php`.
 5. Uruchom aplikację przez lokalny adres serwera.
 
+Po uruchomieniu aplikacja codziennie synchronizuje strukturę schematu z pliku `baza.sql`, więc przy zmianach tabel nie trzeba usuwać bazy i importować jej od nowa.
+
 ## Ważne pliki konfiguracyjne
 
 - `public/template/polaczenie.php` - połączenie z bazą i start sesji
@@ -48,6 +50,7 @@ Jeśli w bazie znajdują się dane przykładowe, można ich użyć do szybkiego 
 
 - brak połączenia z bazą
 - niezaimportowana struktura tabel
+- różnice między aktualnym schematem a starszą bazą, które aplikacja zwykle naprawia przy codziennym syncu
 - nieprawidłowa ścieżka do projektu w katalogu WWW
 - wyłączone rozszerzenie MySQLi w PHP
 

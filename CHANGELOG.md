@@ -25,3 +25,12 @@ W tym pliku zapisujemy najważniejsze zmiany w projekcie.
 - dodanie kontakt.html i kontakt-style.css
 - zmiana polaczenie.php
 - lekka poprawka w logowanie.php i menu-style.css
+
+## [1.2.0] - 2026-05-05
+
+### Zmieniono
+
+- dashboard zadań obsługuje datę startową i automatycznie przełącza zadanie na "w toku" po nadejściu dnia startu
+- dodano ręczną akcję ustawienia zadania jako "w toku"
+- połączenie z bazą wykonuje codzienny import struktury schematu z `baza.sql`, bez importowania danych przykładowych
+- dokumentacja została zaktualizowana do aktualnego zachowania aplikacji

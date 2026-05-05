@@ -49,6 +49,8 @@ Pliki i elementy:
 - `baza.sql`
 - zapytania SQL w poszczególnych widokach
 
+W `polaczenie.php` działa też codzienny mechanizm synchronizacji struktury bazy z `baza.sql`, który dopisuje brakujące elementy schematu bez dotykania danych użytkowników.
+
 ## Autoryzacja
 
 Aplikacja korzysta z sesji PHP:
@@ -83,3 +85,5 @@ Moduły są luźno powiązane i korzystają z tej samej bazy danych oraz tej sam
 ## Integracje
 
 Integracja Google Calendar została całkowicie usunięta. System działa lokalnie na danych własnych aplikacji.
+
+Synchronizacja bazy nie jest zewnętrzną integracją, tylko lokalnym mechanizmem utrzymania zgodności schematu.

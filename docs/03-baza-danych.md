@@ -12,6 +12,8 @@
 
 Projekt korzysta z relacyjnej bazy danych MySQL / MariaDB. Schemat znajduje się w pliku `baza.sql`. Baza przechowuje dane użytkowników, zadania, projekty, terminy szkolne, logi sukcesu, umiejętności oraz dane planera przyszłości.
 
+Aplikacja przy starcie wykonuje codzienny import struktury z `baza.sql`, dzięki czemu nowe kolumny i indeksy mogą być dopisywane bez ręcznego kasowania bazy.
+
 ## Główne encje
 
 ### `uzytkownicy`
@@ -40,6 +42,7 @@ Najważniejsze pola:
 
 - `tytul`
 - `opis`
+- `data_start`
 - `deadline`
 - `priorytet`
 - `status`
@@ -105,6 +108,10 @@ Najważniejsze pola:
 - `status`
 - `utworzony_o`
 
+### `system_meta`
+
+Przechowuje techniczne znaczniki działania aplikacji, w tym datę ostatniego dziennego syncu schematu.
+
 ## Relacje między tabelami
 
 - `uzytkownicy` jest tabelą nadrzędną dla większości rekordów
@@ -118,6 +125,7 @@ Najważniejsze pola:
 - większość tabel posiada klucz główny `id`
 - dane są filtrowane po `uzytkownik_id`
 - używane są indeksy wspierające typowe zapytania po dacie i użytkowniku
+- schemat może być rozszerzany automatycznie przez aplikację bez ręcznej reinstalacji bazy
 
 ## Uwagi techniczne
 
