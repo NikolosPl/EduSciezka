@@ -23,9 +23,9 @@ if (isset($_POST['dodaj_zadanie'])) {
         $sql = "INSERT INTO zadania (uzytkownik_id, kategoria_id, tytul, opis, deadline, priorytet)
                 VALUES ($uid, $kategoria_id, '$tytul', '$opis', '$deadline', '$priorytet')";
         mysqli_query($polaczenie, $sql);
-        $komunikat = "sukces:Zadanie zostalo dodane!";
+        $komunikat = "sukces: Zadanie zostało dodane!";
     } else {
-        $komunikat = "blad:Wypelnij tytul i date!";
+        $komunikat = "błąd: Wypełnij tytuł i datę!";
     }
 }
 
@@ -41,9 +41,9 @@ if (isset($_POST['dodaj_termin'])) {
         $sql = "INSERT INTO terminy_szkolne (uzytkownik_id, przedmiot, typ, opis, data_termin, nauczyciel)
                 VALUES ($uid, '$przedmiot', '$typ', '$opis', '$data_termin', '$nauczyciel')";
         mysqli_query($polaczenie, $sql);
-        $komunikat = "sukces:Termin zostal dodany!";
+        $komunikat = "sukces: Termin został dodany!";
     } else {
-        $komunikat = "blad:Wypelnij przedmiot i date!";
+        $komunikat = "błąd: Wypełnij przedmiot i datę!";
     }
 }
 
@@ -53,11 +53,11 @@ if (isset($_GET['ukoncz']) && is_numeric($_GET['ukoncz'])) {
     $wynik = mysqli_query($polaczenie, "SELECT id, tytul FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
     if (mysqli_num_rows($wynik) == 1) {
         $zad = mysqli_fetch_assoc($wynik);
-        mysqli_query($polaczenie, "UPDATE zadania SET status = 'zakonczone', ukonczone_o = NOW() WHERE id = $zid");
+        mysqli_query($polaczenie, "UPDATE zadania SET status = 'zakończone', ukonczone_o = NOW() WHERE id = $zid");
         $tytul_log = mysqli_real_escape_string($polaczenie, $zad['tytul']);
         mysqli_query($polaczenie, "INSERT INTO logi_sukcesow (uzytkownik_id, zadanie_id, tytul, typ, punkty_xp)
                                    VALUES ($uid, $zid, '$tytul_log', 'zadanie', 10)");
-        header("Location: dashboard.php?msg=sukces:Zadanie ukonczone! Log sukcesu zapisany.");
+        header("Location: dashboard.php?msg=sukces: Zadanie ukończone! Log sukcesu zapisany.");
         exit;
     }
 }
@@ -66,7 +66,7 @@ if (isset($_GET['ukoncz']) && is_numeric($_GET['ukoncz'])) {
 if (isset($_GET['usun']) && is_numeric($_GET['usun'])) {
     $zid = (int) $_GET['usun'];
     mysqli_query($polaczenie, "DELETE FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
-    header("Location: dashboard.php?msg=sukces:Zadanie usuniete.");
+    header("Location: dashboard.php?msg=sukces: Zadanie zostało usunięte.");
     exit;
 }
 
@@ -80,7 +80,7 @@ if (isset($_GET['zalicz_termin']) && is_numeric($_GET['zalicz_termin'])) {
         $tytul_log = mysqli_real_escape_string($polaczenie, $ter['przedmiot']);
         mysqli_query($polaczenie, "INSERT INTO logi_sukcesow (uzytkownik_id, termin_id, tytul, typ, punkty_xp)
                                    VALUES ($uid, $tid, 'Zaliczono: $tytul_log', 'termin_szkolny', 15)");
-        header("Location: dashboard.php?msg=sukces:Termin zaliczony!");
+        header("Location: dashboard.php?msg=sukces: Termin zaliczony!");
         exit;
     }
 }
@@ -125,7 +125,7 @@ $stat_todo = $r[0];
 $r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM zadania WHERE uzytkownik_id = $uid AND status = 'w_toku'"));
 $stat_w_toku = $r[0];
 
-$r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM zadania WHERE uzytkownik_id = $uid AND status = 'zakonczone'"));
+$r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM zadania WHERE uzytkownik_id = $uid AND status = 'zakończone'"));
 $stat_ukonczone = $r[0];
 
 $r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM logi_sukcesow WHERE uzytkownik_id = $uid"));
@@ -138,6 +138,7 @@ $stat_logi = $r[0];
     <meta charset="UTF-8">
     <title>EduŚcieżka - Dashboard</title>
     <link rel="stylesheet" href="../style/dashboard-style.css">
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
 </head>
 
 <body>
@@ -203,11 +204,11 @@ $stat_logi = $r[0];
                 <form method="POST">
                     <div class="rzad-pol">
                         <div class="pole">
-                            <label>Tytuł *</label>
+                            <label>Tytuł <span class="req">*</span></label>
                             <input type="text" name="tytul" placeholder="np. Sprawdzian z matematyki" required>
                         </div>
                         <div class="pole">
-                            <label>Deadline *</label>
+                            <label>Deadline <span class="req">*</span></label>
                             <input type="datetime-local" name="deadline" required>
                         </div>
                     </div>
@@ -225,7 +226,7 @@ $stat_logi = $r[0];
                             <label>Priorytet</label>
                             <select name="priorytet">
                                 <option value="niski">Niski</option>
-                                <option value="sredni" selected>Średni</option>
+                                <option value="średni" selected>Średni</option>
                                 <option value="wysoki">Wysoki</option>
                                 <option value="krytyczny">Krytyczny</option>
                             </select>
@@ -256,6 +257,17 @@ $stat_logi = $r[0];
                             <th>Akcje</th>
                         </tr>
                         <?php while ($zad = mysqli_fetch_assoc($wynik_zadan)): ?>
+                            <?php
+                            $klasy_priorytetu = ['niski'=>'niski','średni'=>'sredni','wysoki'=>'wysoki','krytyczny'=>'krytyczny'];
+                            $klasa = isset($klasy_priorytetu[$zad['priorytet']]) ? $klasy_priorytetu[$zad['priorytet']] : 'niski';
+
+                            $klasy_statusow = [
+                            'do_zrobienia' => 'do_zrobienia',
+                            'w_toku'       => 'w_toku',
+                            'zakończone'   => 'zakonczone',
+                            ];
+                            $klasa_statusu = isset($klasy_statusow[$zad['status']]) ? $klasy_statusow[$zad['status']] : $zad['status'];
+                            ?>
                             <tr>
                                 <td>
                                     <strong><?php echo htmlspecialchars($zad['tytul']); ?></strong>
@@ -272,14 +284,14 @@ $stat_logi = $r[0];
                                         echo '—'; endif; ?>
                                 </td>
                                 <td>
-                                    <span class="priorytet priorytet-<?php echo $zad['priorytet']; ?>">
+                                    <span class="priorytet priorytet-<?php echo $klasa; ?>">
                                         <?php echo ucfirst($zad['priorytet']); ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="status status-<?php echo $zad['status']; ?>">
+                                    <span class="status status-<?php echo $klasa_statusu; ?>">
                                         <?php
-                                        $statusy = array('do_zrobienia' => 'Do zrobienia', 'w_toku' => 'W toku', 'zakonczone' => 'Ukonczone');
+                                        $statusy = array('do_zrobienia' => 'Do zrobienia', 'w_toku' => 'W toku', 'zakończone' => 'Ukonczone');
                                         echo isset($statusy[$zad['status']]) ? $statusy[$zad['status']] : $zad['status'];
                                         ?>
                                     </span>
@@ -289,7 +301,7 @@ $stat_logi = $r[0];
                                     $ts = strtotime($zad['deadline']);
                                     echo date('d.m.Y H:i', $ts);
                                     $roznica = $ts - time();
-                                    if ($zad['status'] != 'zakonczone') {
+                                    if ($zad['status'] != 'zakończone') {
                                         if ($roznica < 0)
                                             echo '<br><span style="color:#b91c1c;font-weight:bold">Po terminie!</span>';
                                         elseif ($roznica < 86400)
@@ -300,12 +312,12 @@ $stat_logi = $r[0];
                                     ?>
                                 </td>
                                 <td>
-                                    <?php if ($zad['status'] != 'zakonczone'): ?>
+                                    <?php if ($zad['status'] != 'zakończone'): ?>
                                         <a href="dashboard.php?ukoncz=<?php echo $zad['id']; ?>" class="akcja akcja-ukoncz"
-                                            onclick="return confirm('Oznaczyc jako ukonczone?')">Ukończ</a>
+                                            onclick="return confirm('Oznaczyć jako ukończone?')">Ukończ</a>
+                                            <a href="dashboard.php?usun=<?php echo $zad['id']; ?>" class="akcja akcja-usun"
+                                            onclick="return confirm('Czy na pewno usunąć to zadanie?')">Usuń</a>
                                     <?php endif; ?>
-                                    <a href="dashboard.php?usun=<?php echo $zad['id']; ?>" class="akcja akcja-usun"
-                                        onclick="return confirm('Czy na pewno usunac to zadanie?')">Usuń</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -326,7 +338,7 @@ $stat_logi = $r[0];
                 <form method="POST">
                     <div class="rzad-pol">
                         <div class="pole">
-                            <label>Przedmiot *</label>
+                            <label>Przedmiot <span class="req">*</span></label>
                             <input type="text" name="przedmiot" placeholder="np. Matematyka" required>
                         </div>
                         <div class="pole">
@@ -341,7 +353,7 @@ $stat_logi = $r[0];
                             </select>
                         </div>
                         <div class="pole">
-                            <label>Data i godzina *</label>
+                            <label>Data i godzina <span class="req">*</span></label>
                             <input type="datetime-local" name="data_termin" required>
                         </div>
                     </div>

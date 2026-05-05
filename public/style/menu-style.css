@@ -5,7 +5,7 @@
     --secondary: #f1f8ff;
     --white: #ffffff;
     --shadow: rgb(204, 204, 204);
-    --span: ##4aa4ff;
+    --span: #4aa4ff;
 }
 
 *{
@@ -226,9 +226,9 @@ h1{
     color: var(--primary);
 }
 
-.why-us-right-card h2{
+/* .why-us-right-card h2{
     color: var(--span);
-}
+} */
 
 .why-us-right-card{
     height: 100%;
