@@ -293,7 +293,7 @@ $stat_logi = $r[0];
                         </tr>
                         <?php while ($zad = mysqli_fetch_assoc($wynik_zadan)): ?>
                             <?php
-                            $klasy_priorytetu = ['niski' => 'niski', 'średni' => 'sredni', 'wysoki' => 'wysoki', 'krytyczny' => 'krytyczny'];
+                            $klasy_priorytetu = ['niski' => 'niski', 'sredni' => 'sredni', 'wysoki' => 'wysoki', 'krytyczny' => 'krytyczny'];
                             $klasa = isset($klasy_priorytetu[$zad['priorytet']]) ? $klasy_priorytetu[$zad['priorytet']] : 'niski';
 
                             $klasy_statusow = [

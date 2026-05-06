@@ -1,31 +1,209 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, sans-serif; background: #f3f4f6; color: #333; }
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 
-.pasek { background: #2563EB; color: #fff; padding: 0 20px; height: 54px; display: flex; align-items: center; justify-content: space-between; }
-.pasek .logo { font-size: 20px; font-weight: bold; }
-.pasek a { color: #fff; text-decoration: none; margin-left: 16px; font-size: 13px; }
+:root {
+    --primary: #2A95FF;
+    --primary-hover: #1e82e6;
+    --primary-light: #f1f8ff;
+    --surface: #ffffff;
+    --shadow-color: rgba(204, 204, 204, 0.4);
+    --bg: #f8faff;
+    --text: #2c3e50;
+    --text-muted: #7f8c8d;
+    --border: #d1e1f5;
+    
+    /* Kolory specyficzne dla sukcesów */
+    --xp-color: #8b5cf6;
+    --success-light: #dcfce7;
+    --success-dark: #166534;
+    
+    --radius: 14px;
+    --radius-sm: 8px;
+}
 
-.menu { background: #1e3a8a; display: flex; padding: 0 20px; }
-.menu a { color: rgba(255,255,255,0.75); text-decoration: none; padding: 10px 14px; font-size: 14px; }
-.menu a:hover, .menu a.aktywny { color: #fff; background: rgba(255,255,255,0.1); }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Source Sans 3", sans-serif;
+}
 
-.tresc { padding: 20px; max-width: 900px; margin: 0 auto; }
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+}
 
-.statystyki { display: flex; gap: 14px; margin-bottom: 20px; }
-.karta-stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 24px; flex: 1; text-align: center; border-top: 4px solid #8b5cf6; }
-.karta-stat .liczba { font-size: 30px; font-weight: bold; color: #111; }
-.karta-stat .etykieta { font-size: 12px; color: #6b7280; margin-top: 4px; }
+/* Nawigacja spójna z resztą systemu */
+.pasek {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.9em 1.8em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 12px var(--shadow-color);
+}
 
-.sekcja { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; }
-.sekcja-naglowek { background: #f9fafb; border-bottom: 1px solid #e5e7eb; padding: 12px 16px; }
-.sekcja-naglowek h2 { font-size: 15px; color: #111; }
+.pasek .logo {
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
 
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { background: #f3f4f6; text-align: left; padding: 8px 12px; font-size: 12px; color: #6b7280; text-transform: uppercase; border-bottom: 1px solid #e5e7eb; }
-td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: #f9fafb; }
+.pasek a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1em;
+    font-size: 0.82rem;
+    background: rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: 0.2s;
+    font-weight: 600;
+}
 
-.pusta { text-align: center; padding: 40px; color: #9ca3af; font-size: 14px; }
-.xp { color: #8b5cf6; font-weight: bold; }
-.typ-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; background: #dbeafe; color: #1e40af; font-weight: bold; }
+.pasek a:hover { background: rgba(255,255,255,0.35); }
+
+/* Menu */
+.menu {
+    background-color: var(--primary-hover);
+    display: flex;
+    padding: 0 1.4em;
+    gap: 0.2em;
+}
+
+.menu a {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    padding: 0.85em 1.2em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+}
+
+.menu a:hover, .menu a.aktywny {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+
+.menu a.aktywny { border-bottom-color: #fff; }
+
+/* Kontener treści */
+.tresc {
+    padding: 1.5em 1.8em;
+    max-width: 1000px; /* Nieco węższy dla lepszej czytelności logów */
+    margin: 0 auto;
+}
+
+/* Statystyki na górze */
+.statystyki {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.2em;
+    margin-bottom: 2em;
+}
+
+.karta-stat {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5em;
+    text-align: center;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 6px -1px var(--shadow-color);
+    border-top: 5px solid var(--xp-color); /* Fioletowy akcent dla logów */
+}
+
+.karta-stat .liczba {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--text);
+}
+
+.karta-stat .etykieta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+/* Sekcja tabeli */
+.sekcja {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.sekcja-naglowek {
+    padding: 1.2em 1.5em;
+    border-bottom: 1px solid var(--border);
+    background: #fdfdfe;
+}
+
+.sekcja-naglowek h2 {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+/* Tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f9fafb;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 800;
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    padding: 14px 15px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 0.95rem;
+}
+
+tr:hover td {
+    background: #fcfdfe;
+}
+
+/* Badge typu i XP */
+.typ-badge {
+    font-size: 0.7rem;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 800;
+    text-transform: uppercase;
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.xp {
+    color: var(--xp-color);
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* Komunikat o pustej liście */
+.pusta {
+    padding: 3em;
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* Responsywność dla małych ekranów */
+@media (max-width: 600px) {
+    .statystyki { grid-template-columns: 1fr; }
+    .pasek { flex-direction: column; gap: 10px; text-align: center; }
+}

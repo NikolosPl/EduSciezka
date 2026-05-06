@@ -103,11 +103,11 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
             <form method="POST">
                 <div class="rzad-pol">
                     <div class="pole">
-                        <label>Nazwa projektu *</label>
+                        <label>Nazwa projektu <span class="req">*</span></label>
                         <input type="text" name="nazwa" placeholder="np. Portfolio na GitHub" required>
                     </div>
                     <div class="pole">
-                        <label>Deadline *</label>
+                        <label>Deadline <span class="req">*</span></label>
                         <input type="date" name="deadline" required>
                     </div>
                 </div>
