@@ -51,3 +51,19 @@ a.akcja-usun:hover { background: #fecaca; }
 .xp { color: #8b5cf6; font-weight: bold; }
 .typ-badge { font-size: 11px; padding: 2px 6px; border-radius: 4px; background: #dbeafe; color: #1e40af; font-weight: bold; }
 .pusta { text-align: center; padding: 24px; color: #9ca3af; font-size: 13px; }
+
+.formularz-admin {
+    padding: 20px;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.formularz-admin textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: inherit;
+    resize: vertical;
+}

@@ -59,6 +59,88 @@ $r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM zadania WH
 $stat_done = $r[0];
 $r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM logi_sukcesow"));
 $stat_logi = $r[0];
+
+if (isset($_GET['usun_ogloszenie']) && is_numeric($_GET['usun_ogloszenie'])) {
+    $id = (int)$_GET['usun_ogloszenie'];
+    
+    // Najpierw sprawdzamy czy jest zdjęcie, żeby je skasować z dysku
+    $stare_foto = mysqli_query($polaczenie, "SELECT zdjecie FROM ogloszenia WHERE id = $id");
+    $foto_data = mysqli_fetch_assoc($stare_foto);
+    
+    if ($foto_data && !empty($foto_data['zdjecie'])) {
+        $sciezka_do_pliku = "../uploads/ogloszenia/" . $foto_data['zdjecie'];
+        if (file_exists($sciezka_do_pliku)) {
+            unlink($sciezka_do_pliku);
+        }
+    }
+    
+    mysqli_query($polaczenie, "DELETE FROM ogloszenia WHERE id = $id");
+    header("Location: admin.php?msg=sukces:Ogłoszenie usunięte!");
+    exit;
+}
+
+// 2. LOGIKA DODAWANIA OGŁOSZENIA
+if (isset($_POST['dodaj_ogloszenie'])) {
+    // Zabezpieczamy tekst
+    $tytul = mysqli_real_escape_string($polaczenie, $_POST['ogloszenie_tytul']);
+    $tresc_raw = $_POST['ogloszenie_tresc'];
+    $tresc = mysqli_real_escape_string($polaczenie, $tresc_raw);
+    
+    // AUTOMATYCZNY KRÓTKI OPIS (skracanie do 100 znaków z treści głównej)
+    $skrocony = mb_substr(strip_tags($tresc_raw), 0, 100);
+    $krotki_opis = mysqli_real_escape_string($polaczenie, $skrocony);
+    
+    $data_dodania = date("Y-m-d");
+    $nazwa_foto = ""; // Domyślnie puste
+    $blad_pliku = false;
+
+    // OBSŁUGA ZDJĘCIA + ZABEZPIECZENIA
+    if (isset($_FILES['ogloszenie_foto']) && $_FILES['ogloszenie_foto']['error'] == 0) {
+        $file = $_FILES['ogloszenie_foto'];
+        $upload_dir = "../uploads/ogloszenia/";
+        
+        // Sprawdzamy typ MIME (czy to na pewno obrazek)
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);
+        $dozwolone_mimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        
+        // Sprawdzamy rozszerzenie
+        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $dozwolone_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
+        if (!in_array($mime, $dozwolone_mimes) || !in_array($ext, $dozwolone_ext)) {
+            $komunikat = "blad:Nieprawidłowy format zdjęcia (tylko JPG, PNG, WEBP).";
+            $blad_pliku = true;
+        } elseif ($file['size'] > 2 * 1024 * 1024) { // Max 2MB
+            $komunikat = "blad:Zdjęcie jest za duże (max 2MB).";
+            $blad_pliku = true;
+        } else {
+            // Generujemy unikalną, bezpieczną nazwę
+            $nazwa_foto = bin2hex(random_bytes(8)) . "." . $ext;
+            
+            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
+            
+            if (!move_uploaded_file($file['tmp_name'], $upload_dir . $nazwa_foto)) {
+                $komunikat = "blad:Błąd podczas zapisywania pliku na serwerze.";
+                $blad_pliku = true;
+            }
+        }
+        finfo_close($finfo);
+    }
+
+    // ZAPIS DO BAZY (jeśli nie było błędów z plikiem)
+    if (!$blad_pliku) {
+        $query = "INSERT INTO ogloszenia (tytul, tresc, krotki_opis, zdjecie, data_dodania) 
+                  VALUES ('$tytul', '$tresc', '$krotki_opis', '$nazwa_foto', '$data_dodania')";
+        
+        if (mysqli_query($polaczenie, $query)) {
+            header("Location: admin.php?msg=sukces:Ogłoszenie opublikowane poprawnie!");
+            exit;
+        } else {
+            $komunikat = "blad:Błąd bazy danych: " . mysqli_error($polaczenie);
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -111,6 +193,37 @@ $stat_logi = $r[0];
             <div class="etykieta">Logow sukcesu</div>
         </div>
     </div>
+
+    <div class="sekcja" id="ogloszenia">
+        <div class="sekcja-naglowek">
+            <h2>Dodaj nowe ogłoszenie systemowe</h2>
+        </div>
+        
+ <div class="formularz-admin">
+    <form action="admin.php" method="POST" enctype="multipart/form-data">
+        <div class="rzad-pol">
+            <div class="pole">
+                <label>Tytuł ogłoszenia</label>
+                <input type="text" name="ogloszenie_tytul" placeholder="np. Przerwa techniczna" required>
+            </div>
+            
+            <div class="pole">
+                <label>Zdjęcie ogłoszenia</label>
+                <input type="file" name="ogloszenie_foto" accept="image/*" class="input-file">
+            </div>
+        </div>
+
+        <div class="rzad-pol">
+            <div class="pole">
+                <label>Treść ogłoszenia</label>
+                <textarea name="ogloszenie_tresc" rows="3" placeholder="Wpisz treść wiadomości dla wszystkich użytkowników..." required></textarea>
+            </div>
+        </div>
+
+        <button type="submit" name="dodaj_ogloszenie" class="btn-dodaj">Opublikuj ogłoszenie</button>
+    </form>
+</div>
+
 
     <!-- UZYTKOWNICY -->
     <div class="sekcja" id="uzytkownicy">

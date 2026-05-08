@@ -30,7 +30,6 @@
 body {
     background-color: var(--bg);
     color: var(--text);
-    line-height: 1.5;
 }
 
 /* Nawigacja spójna z resztą systemu */

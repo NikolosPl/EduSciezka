@@ -13,7 +13,7 @@
           <a href="../../index.html" id="nav-title">EduŚcieżka</a>
         </li>
         <li><a href="./o_aplikacji.html">O aplikacji</a></li>
-        <li><a href="./informacje.html">Informacje</a></li>
+        <li><a href="./informacje.php">Informacje</a></li>
         <li><a href="./kontakt.html">Kontakt</a></li>
         <li>
           <a href="./logowanie.php"><button>Zaloguj się</button></a>
@@ -26,61 +26,56 @@
                 <h2>Co nowego?</h2>
                 <div class="line"></div>
             </div>
+<?php
+        // Pobieramy 7 najnowszych ogłoszeń
+        require_once "polaczenie.php";
+        $sql = "SELECT * FROM ogloszenia ORDER BY data_dodania DESC, id DESC LIMIT 7";
+        $wynik = mysqli_query($polaczenie, $sql);
+
+        if (mysqli_num_rows($wynik) > 0):
+            // 1. Pobieramy pierwszy (najnowszy) element dla dużego wyświetlania
+            $najnowszy = mysqli_fetch_assoc($wynik);
+            
+            // Ścieżka do zdjęcia (jeśli brak, dajemy zaślepkę)
+            $foto_glowne = !empty($najnowszy['zdjecie']) ? "../uploads/ogloszenia/" . $najnowszy['zdjecie'] : "../img/prototyp-zdjecia.png";
+        ?>
+
             <div class="latest-info">
-                <img src="../img/prototyp-zdjecia.png" alt="#">
+                <img src="<?php echo $foto_glowne; ?>" alt="<?php echo htmlspecialchars($najnowszy['tytul']); ?>">
                 <div class="latest-info-text">
-                    <h3>Tytuł</h3>
+                    <h3><?php echo htmlspecialchars($najnowszy['tytul']); ?></h3>
                     <div class="line"></div>
-                    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Fugiat cum dolore quo quibusdam sunt natus magnam numquam beatae? Minus necessitatibus distinctio amet incidunt laborum, magnam reiciendis libero doloribus aliquid similique ipsum quos ab quia ut eveniet voluptas earum modi facere voluptates eos est vitae, enim recusandae. Doloremque eius ducimus ipsum accusamus sunt corporis exercitationem. Iusto asperiores ipsam placeat quos ut. Porro repellendus fuga hic velit, at expedita ea voluptates veritatis optio, quos, aut cupiditate magni enim quasi nostrum cumque reprehenderit ipsa perferendis! Maxime saepe veniam vitae exercitationem quibusdam nihil necessitatibus labore, nostrum quisquam omnis, cum, animi id unde. Recusandae, deserunt!</p>
-                    <a href="#">Czytaj dalej</a>
+                    <p><?php echo htmlspecialchars($najnowszy['krotki_opis']); ?></p>
+                    <a href="ogloszenie.php?id=<?php echo $najnowszy['id']; ?>">Czytaj dalej</a>
                 </div>
             </div>
-             <div class="the-rest">
-                <div class="info-card">
-                    <img src="../img/prototyp-zdjecia.png" alt="#">
-                    <h4>Tytuł</h4>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque nemo explicabo quisquam minima eaque velit unde. Aperiam inventore ratione, eaque facere sunt ullam quibusdam accusamus beatae porro rem libero molestiae.</p>
-                    <a href="#">Czytaj dalej</a>
-                </div>
-                <div class="info-card">
-                    <img src="../img/prototyp-zdjecia.png" alt="#">
-                    <h4>Tytuł</h4>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque nemo explicabo quisquam minima eaque velit unde. Aperiam inventore ratione, eaque facere sunt ullam quibusdam accusamus beatae porro rem libero molestiae.</p>
-                    <a href="#">Czytaj dalej</a>
-                </div>
-                <div class="info-card">
-                    <img src="../img/prototyp-zdjecia.png" alt="#">
-                    <h4>Tytuł</h4>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque nemo explicabo quisquam minima eaque velit unde. Aperiam inventore ratione, eaque facere sunt ullam quibusdam accusamus beatae porro rem libero molestiae.</p>
-                    <a href="#">Czytaj dalej</a>
-                </div>
-                <div class="info-card">
-                    <img src="../img/prototyp-zdjecia.png" alt="#">
-                    <h4>Tytuł</h4>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque nemo explicabo quisquam minima eaque velit unde. Aperiam inventore ratione, eaque facere sunt ullam quibusdam accusamus beatae porro rem libero molestiae.</p>
-                    <a href="#">Czytaj dalej</a>
-                </div>
-                <div class="info-card">
-                    <img src="../img/prototyp-zdjecia.png" alt="#">
-                    <h4>Tytuł</h4>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque nemo explicabo quisquam minima eaque velit unde. Aperiam inventore ratione, eaque facere sunt ullam quibusdam accusamus beatae porro rem libero molestiae.</p>
-                    <a href="#">Czytaj dalej</a>
-                </div>
-                <div class="info-card">
-                    <img src="../img/prototyp-zdjecia.png" alt="#">
-                    <h4>Tytuł</h4>
-                    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque nemo explicabo quisquam minima eaque velit unde. Aperiam inventore ratione, eaque facere sunt ullam quibusdam accusamus beatae porro rem libero molestiae.</p>
-                    <a href="#">Czytaj dalej</a>
-                </div>
+
+            <div class="the-rest">
+                <?php 
+                // Kontynuujemy pętlę dla pozostałych rekordów (wynik "pamięta", że jeden już pobraliśmy)
+                while ($o = mysqli_fetch_assoc($wynik)): 
+                    $foto_karta = !empty($o['zdjecie']) ? "../uploads/ogloszenia/" . $o['zdjecie'] : "../img/prototyp-zdjecia.png";
+                ?>
+                    <div class="info-card">
+                        <img src="<?php echo $foto_karta; ?>" alt="<?php echo htmlspecialchars($o['tytul']); ?>">
+                        <h4><?php echo htmlspecialchars($o['tytul']); ?></h4>
+                        <p><?php echo htmlspecialchars($o['krotki_opis']); ?></p>
+                        <a href="ogloszenie.php?id=<?php echo $o['id']; ?>">Czytaj dalej</a>
+                    </div>
+                <?php endwhile; ?>
             </div>
-        </div>
+
+        <?php else: ?>
+            <p style="text-align: center; padding: 50px;">Obecnie nie ma żadnych nowych informacji.</p>
+        <?php endif; ?>
+    </div>
     </main>
     <footer class="footer">
       <div class="footer-left">
         <a href="../../index.html"><h4>EduŚcieżka</h4></a>
         <ul>
           <li><a href="./o_aplikacji.html">O aplikacji</a></li>
-          <li><a href="./informacje.html">Informacje</a></li>
+          <li><a href="./informacje.php">Informacje</a></li>
           <li><a href="./kontakt.html">Kontakt</a></li>
         </ul>
       </div>
