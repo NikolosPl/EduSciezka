@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Mar 14, 2026 at 06:28 PM
+-- Host: localhost
+-- Generation Time: Maj 08, 2026 at 05:19 PM
 -- Wersja serwera: 10.4.32-MariaDB
 -- Wersja PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `student_planner`
+-- Database: `nikolospl_edusciezka`
 --
 
 -- --------------------------------------------------------
@@ -92,6 +92,28 @@ CREATE TABLE `logi_sukcesow` (
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `ogloszenia`
+--
+
+CREATE TABLE `ogloszenia` (
+  `id` int(11) NOT NULL,
+  `tytul` varchar(100) NOT NULL,
+  `tresc` varchar(3000) NOT NULL,
+  `krotki_opis` varchar(100) NOT NULL,
+  `zdjecie` text NOT NULL,
+  `data_dodania` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `ogloszenia`
+--
+
+INSERT INTO `ogloszenia` (`id`, `tytul`, `tresc`, `krotki_opis`, `zdjecie`, `data_dodania`) VALUES
+(1, 'Mega', 'Mega super haha śmieszne beka. Inwokacja:if (isset($_GET[\'usun_ogloszenie\']) && is_numeric($_GET[\'usun_ogloszenie\'])) {\r\n    $id = (int)$_GET[\'usun_ogloszenie\'];\r\n    \r\n    // Najpierw sprawdzamy czy jest zdjęcie, żeby je skasować z dysku\r\n    $stare_foto = mysqli_query($polaczenie, \"SELECT zdjecie FROM ogloszenia WHERE id = $id\");\r\n    $foto_data = mysqli_fetch_assoc($stare_foto);\r\n    \r\n    if ($foto_data && !empty($foto_data[\'zdjecie\'])) {\r\n        $sciezka_do_pliku = \"../uploads/ogloszenia/\" . $foto_data[\'zdjecie\'];\r\n        if (file_exists($sciezka_do_pliku)) {\r\n            unlink($sciezka_do_pliku);\r\n        }\r\n    }\r\n    \r\n    mysqli_query($polaczenie, \"DELETE FROM ogloszenia WHERE id = $id\");\r\n    header(\"Location: admin.php?msg=sukces:Ogłoszenie usunięte!\");\r\n    exit;\r\n}\r\n\r\n// 2. LOGIKA DODAWANIA OGŁOSZENIA\r\nif (isset($_POST[\'dodaj_ogloszenie\'])) {\r\n    // Zabezpieczamy tekst\r\n    $tytul = mysqli_real_escape_string($polaczenie, $_POST[\'ogloszenie_tytul\']);\r\n    $tresc_raw = $_POST[\'ogloszenie_tresc\'];\r\n    $tresc = mysqli_real_escape_string($polaczenie, $tresc_raw);\r\n    \r\n    // AUTOMATYCZNY KRÓTKI OPIS (skracanie do 100 znaków z treści głównej)\r\n    $skrocony = mb_substr(strip_tags($tresc_raw), 0, 100);\r\n    $krotki_opis = mysqli_real_escape_string($polaczenie, $skrocony);\r\n    \r\n    $data_dodania = date(\"Y-m-d\");\r\n    $nazwa_foto = \"\"; // Domyślnie puste\r\n    $blad_pliku = false;\r\n\r\n    // OBSŁUGA ZDJĘCIA + ZABEZPIECZENIA\r\n    if (isset($_FILES[\'ogloszenie_foto\']) && $_FILES[\'ogloszenie_foto\'][\'error\'] == 0) {\r\n        $file = $_FILES[\'ogloszenie_foto\'];\r\n        $upload_dir = \"../uploads/ogloszenia/\";\r\n        \r\n        // Sprawdzamy typ MIME (czy to na pewno obrazek)\r\n        $finfo = finfo_open(FILEINFO_MIME_TYPE);\r\n        $mime = finfo_file($finfo, $file[\'tmp_name\']);\r\n        $dozwolone_mimes = [\'image/jpeg\', \'image/png\', \'image/gif\', \'image/webp\'];\r\n        \r\n        // Sprawdzamy rozszerzenie\r\n        $ext = strtolower(pathinfo($file[\'name\'], PATHINFO_EXTENSION));\r\n        $dozwolone_ext = [\'jpg\', \'jpeg\', \'png\', \'gif\', \'webp\'];\r\n\r\n        if (!in_array($mime, $dozwolone_mimes) || !in_array($ext, $dozwolone_ext)) {\r\n            $komunikat = \"blad:Nieprawidłowy format zdjęcia (tylko JPG, PNG, WEBP).\";\r\n            $blad_pliku = true;\r\n        } elseif ($file[\'size\'] > 2 * 1024 * 1024) { // Max 2MB\r\n            $komunikat = \"blad:Zdjęcie jest za duże (max 2MB).\";\r\n            $blad_pliku = true;\r\n        } else {\r\n            // Generujemy unikalną, bezpieczną nazwę\r\n            $nazwa_foto = bin2hex(random_bytes(8)) . \".\" . $ext;\r\n            \r\n            if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);\r\n            \r\n            if (!move_uploaded_file($file[\'tmp_name\'], $upload_dir . $nazwa_foto)) {\r\n                $komunikat = \"blad:Błąd podczas zapisywania pliku na serwerze.\";\r\n                $blad_pliku = true;\r\n            }\r\n        }\r\n        finfo_close($finfo);\r\n    }\r\n\r\n    // ZAPIS DO BAZY (jeśli nie był', 'Mega super haha śmieszne beka. Inwokacja:if (isset($_GET[\'usun_ogloszenie\']) && is_numeric($_GET[\'us', '510f5aa970573e58.png', '2026-05-08');
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `planer_przyszlosci`
 --
 
@@ -106,6 +128,17 @@ CREATE TABLE `planer_przyszlosci` (
   `status` enum('plan','w_toku','zakonczone') NOT NULL DEFAULT 'plan',
   `utworzony_o` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `planer_przyszlosci`
+--
+
+INSERT INTO `planer_przyszlosci` (`id`, `uzytkownik_id`, `etap`, `tytul`, `opis`, `data_start`, `data_koniec`, `status`, `utworzony_o`) VALUES
+(1, 2, 'szkola_koniec', 'Matura i domkniecie szkoly', 'Autoplan AI dla celu: wafafa. Szacowany czas: 6 tygodni.', '2026-05-23', '2026-07-03', 'plan', '2026-05-08 16:27:28'),
+(2, 2, 'studia', 'Studia zaoczne lub online', 'Autoplan AI dla celu: wafafa. Szacowany czas: 18 tygodni.', '2026-07-04', '2026-11-06', 'plan', '2026-05-08 16:27:28'),
+(3, 2, 'praca', 'Praca + nauka rownolegle', 'Autoplan AI dla celu: wafafa. Szacowany czas: 20 tygodni.', '2026-11-07', '2027-03-26', 'plan', '2026-05-08 16:27:28'),
+(4, 2, 'praca', 'Specjalizacja i awans junior -> regular', 'Autoplan AI dla celu: wafafa. Szacowany czas: 16 tygodni.', '2027-03-27', '2027-07-16', 'plan', '2026-05-08 16:27:28'),
+(5, 2, 'certyfikat_szkolenie', 'Certyfikat strategiczny dla celu: wafafa', 'Autoplan AI dla celu: wafafa. Szacowany czas: 8 tygodni.', '2027-07-17', '2027-09-10', 'plan', '2026-05-08 16:27:28');
 
 -- --------------------------------------------------------
 
@@ -184,6 +217,13 @@ CREATE TABLE `system_meta` (
   `zaktualizowano_o` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `system_meta`
+--
+
+INSERT INTO `system_meta` (`klucz`, `wartosc`, `zaktualizowano_o`) VALUES
+('schema_sync_last_run', '2026-05-08', '2026-05-08 16:17:43');
+
 -- --------------------------------------------------------
 
 --
@@ -249,7 +289,8 @@ CREATE TABLE `uzytkownicy` (
 --
 
 INSERT INTO `uzytkownicy` (`id`, `imie`, `nazwisko`, `email`, `haslo_hash`, `avatar_url`, `data_rejestracji`, `ostatnie_logowanie`, `aktywny`) VALUES
-(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com', '$2y$12$placeholder_bcrypt_hash', NULL, '2026-03-14 18:22:54', NULL, 1);
+(1, 'Jan', 'Kowalski', 'jan.kowalski@example.com', '$2y$12$placeholder_bcrypt_hash', NULL, '2026-03-14 18:22:54', NULL, 1),
+(2, 'Wiktoria', 'Chojnacka', 'wiktoria@example.com', '$2y$10$dRGnlBYGms89DMFclLOSdOq6pCUNBVuO.fvBb95TneReN4jqiIWNi', NULL, '2026-05-08 16:18:13', '2026-05-08 16:18:21', 1);
 
 -- --------------------------------------------------------
 
@@ -274,10 +315,6 @@ CREATE TABLE `zadania` (
   `regula_powtorzen` varchar(100) DEFAULT NULL,
   `utworzony_o` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dodanie kolumny daty startowej do tabeli `zadania`
---
 
 --
 -- Dumping data for table `zadania`
@@ -318,6 +355,7 @@ ALTER TABLE `kategorie`
   ADD PRIMARY KEY (`id`),
   ADD KEY `uzytkownik_id` (`uzytkownik_id`);
 
+--
 -- Indeksy dla tabeli `logi_sukcesow`
 --
 ALTER TABLE `logi_sukcesow`
@@ -327,6 +365,12 @@ ALTER TABLE `logi_sukcesow`
   ADD KEY `kamien_id` (`kamien_id`),
   ADD KEY `termin_id` (`termin_id`),
   ADD KEY `idx_logi_data` (`data_osiagniecia`);
+
+--
+-- Indeksy dla tabeli `ogloszenia`
+--
+ALTER TABLE `ogloszenia`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeksy dla tabeli `planer_przyszlosci`
@@ -427,16 +471,23 @@ ALTER TABLE `kamienie_milowe`
 ALTER TABLE `kategorie`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
+--
 -- AUTO_INCREMENT for table `logi_sukcesow`
 --
 ALTER TABLE `logi_sukcesow`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `ogloszenia`
+--
+ALTER TABLE `ogloszenia`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `planer_przyszlosci`
 --
 ALTER TABLE `planer_przyszlosci`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `powiadomienia`
@@ -472,7 +523,7 @@ ALTER TABLE `umiejetnosci`
 -- AUTO_INCREMENT for table `uzytkownicy`
 --
 ALTER TABLE `uzytkownicy`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `zadania`
@@ -497,6 +548,7 @@ ALTER TABLE `kamienie_milowe`
 ALTER TABLE `kategorie`
   ADD CONSTRAINT `kategorie_ibfk_1` FOREIGN KEY (`uzytkownik_id`) REFERENCES `uzytkownicy` (`id`) ON DELETE CASCADE;
 
+--
 -- Constraints for table `logi_sukcesow`
 --
 ALTER TABLE `logi_sukcesow`
