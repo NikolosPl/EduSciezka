@@ -518,6 +518,7 @@ $etykiety_etapow = array(
 <head>
     <meta charset="UTF-8">
     <title>EduŚcieżka - Planer przyszlosci</title>
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/planer-przyszlosci-style.css">
 </head>
 

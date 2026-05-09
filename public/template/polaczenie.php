@@ -44,6 +44,36 @@ function edusciezka_constraint_exists($polaczenie, $table, $constraint)
     return $wynik && mysqli_num_rows($wynik) > 0;
 }
 
+function edusciezka_safe_query($polaczenie, $sql)
+{
+    try {
+        return mysqli_query($polaczenie, $sql);
+    } catch (mysqli_sql_exception $e) {
+        return false;
+    }
+}
+
+function edusciezka_index_columns($clause)
+{
+    if (!preg_match('/\((.*)\)/', $clause, $matches)) {
+        return array();
+    }
+
+    $inside = $matches[1];
+    preg_match_all('/`([^`]+)`|([A-Za-z0-9_]+)/', $inside, $column_matches, PREG_SET_ORDER);
+
+    $columns = array();
+    foreach ($column_matches as $match) {
+        $column = isset($match[1]) && $match[1] !== '' ? $match[1] : $match[2];
+        if ($column === '' || strtoupper($column) === 'ASC' || strtoupper($column) === 'DESC') {
+            continue;
+        }
+        $columns[] = $column;
+    }
+
+    return array_values(array_unique($columns));
+}
+
 function edusciezka_split_sql_statements($sql)
 {
     $statements = array();
@@ -126,12 +156,16 @@ function edusciezka_apply_schema_sync($polaczenie, $schema_file)
         return;
     }
 
-    mysqli_query($polaczenie, "CREATE TABLE IF NOT EXISTS `system_meta` (
+    edusciezka_safe_query($polaczenie, "CREATE TABLE IF NOT EXISTS `system_meta` (
         `klucz` varchar(100) NOT NULL,
         `wartosc` text DEFAULT NULL,
         `zaktualizowano_o` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
         PRIMARY KEY (`klucz`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci");
+
+    if (edusciezka_table_exists($polaczenie, 'zadania') && !edusciezka_column_exists($polaczenie, 'zadania', 'data_start')) {
+        edusciezka_safe_query($polaczenie, "ALTER TABLE `zadania` ADD COLUMN `data_start` date DEFAULT NULL AFTER `opis`");
+    }
 
     $today = date('Y-m-d');
     $wynik = mysqli_query($polaczenie, "SELECT `wartosc` FROM `system_meta` WHERE `klucz` = 'schema_sync_last_run' LIMIT 1");
@@ -163,20 +197,8 @@ function edusciezka_apply_schema_sync($polaczenie, $schema_file)
         if (preg_match('/^CREATE TABLE\s+`?([^`\s]+)`?/i', $statement, $matches)) {
             $table = $matches[1];
             if (!edusciezka_table_exists($polaczenie, $table)) {
-                mysqli_query($polaczenie, $statement);
+                edusciezka_safe_query($polaczenie, $statement);
             }
-            continue;
-        }
-
-        if (preg_match('/^INSERT INTO\s+`?([^`\s]+)`?/i', $statement, $matches)) {
-            $table = $matches[1];
-            if (edusciezka_table_exists($polaczenie, $table)) {
-                $licznik = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM `$table`"));
-                if ($licznik && (int) $licznik[0] > 0) {
-                    continue;
-                }
-            }
-            mysqli_query($polaczenie, $statement);
             continue;
         }
 
@@ -192,33 +214,42 @@ function edusciezka_apply_schema_sync($polaczenie, $schema_file)
 
                 if (preg_match('/^ADD COLUMN\s+`?([^`\s]+)`?/i', $clause, $column_match)) {
                     if (!edusciezka_column_exists($polaczenie, $table, $column_match[1])) {
-                        mysqli_query($polaczenie, "ALTER TABLE `$table` $clause");
+                        edusciezka_safe_query($polaczenie, "ALTER TABLE `$table` $clause");
                     }
                     continue;
                 }
 
                 if (preg_match('/^ADD PRIMARY KEY/i', $clause)) {
                     if (!edusciezka_index_exists($polaczenie, $table, 'PRIMARY')) {
-                        mysqli_query($polaczenie, "ALTER TABLE `$table` $clause");
+                        edusciezka_safe_query($polaczenie, "ALTER TABLE `$table` $clause");
                     }
                     continue;
                 }
 
                 if (preg_match('/^ADD (?:UNIQUE KEY|KEY|INDEX)\s+`?([^`\s(]+)`?/i', $clause, $index_match)) {
-                    if (!edusciezka_index_exists($polaczenie, $table, $index_match[1])) {
-                        mysqli_query($polaczenie, "ALTER TABLE `$table` $clause");
+                    $index_columns = edusciezka_index_columns($clause);
+                    $missing_columns = false;
+                    foreach ($index_columns as $index_column) {
+                        if (!edusciezka_column_exists($polaczenie, $table, $index_column)) {
+                            $missing_columns = true;
+                            break;
+                        }
+                    }
+
+                    if (!$missing_columns && !edusciezka_index_exists($polaczenie, $table, $index_match[1])) {
+                        edusciezka_safe_query($polaczenie, "ALTER TABLE `$table` $clause");
                     }
                     continue;
                 }
 
                 if (preg_match('/^ADD CONSTRAINT\s+`?([^`\s]+)`?/i', $clause, $constraint_match)) {
                     if (!edusciezka_constraint_exists($polaczenie, $table, $constraint_match[1])) {
-                        mysqli_query($polaczenie, "ALTER TABLE `$table` $clause");
+                        edusciezka_safe_query($polaczenie, "ALTER TABLE `$table` $clause");
                     }
                     continue;
                 }
 
-                mysqli_query($polaczenie, "ALTER TABLE `$table` $clause");
+                edusciezka_safe_query($polaczenie, "ALTER TABLE `$table` $clause");
             }
 
             continue;
@@ -226,7 +257,7 @@ function edusciezka_apply_schema_sync($polaczenie, $schema_file)
     }
 
     $today_esc = mysqli_real_escape_string($polaczenie, $today);
-    mysqli_query($polaczenie, "INSERT INTO `system_meta` (`klucz`, `wartosc`) VALUES ('schema_sync_last_run', '$today_esc') ON DUPLICATE KEY UPDATE `wartosc` = VALUES(`wartosc`)");
+    edusciezka_safe_query($polaczenie, "INSERT INTO `system_meta` (`klucz`, `wartosc`) VALUES ('schema_sync_last_run', '$today_esc') ON DUPLICATE KEY UPDATE `wartosc` = VALUES(`wartosc`)");
 }
 
 edusciezka_apply_schema_sync($polaczenie, dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'baza.sql');

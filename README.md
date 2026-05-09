@@ -37,12 +37,18 @@ EduSciezka/
 
 ## Szybki start
 
-1. Zaimportuj [baza.sql](baza.sql) do bazy `student_planner`.
+1. Zaimportuj [baza.sql](baza.sql) do bazy `nikolospl_edusciezka`.
 2. Ustaw połączenie z bazą w [public/template/polaczenie.php](public/template/polaczenie.php).
 3. Uruchom projekt przez lokalny serwer, np. XAMPP.
 4. Otwórz ekran logowania przez [public/template/logowanie.php](public/template/logowanie.php).
 
 Po uruchomieniu aplikacja codziennie synchronizuje strukturę bazy z [baza.sql](baza.sql), więc nie trzeba ponownie usuwać i importować całej bazy przy zmianach schematu.
+
+## Dostęp administratora
+
+Panel admina jest ukryty. Aby uzyskać dostęp:
+1. Kliknij **5 razy** w logo "EduŚcieżka" na stronie logowania
+2. Wpisz hasło admina (znajdziesz w pliku `.env` jako `EDUSCIEZKA_ADMIN_PASSWORD`)
 
 ## Dokumentacja i pliki pomocnicze
 

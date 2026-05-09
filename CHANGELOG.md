@@ -26,6 +26,27 @@ W tym pliku zapisujemy najważniejsze zmiany w projekcie.
 - zmiana polaczenie.php
 - lekka poprawka w logowanie.php i menu-style.css
 
+## [1.3.0] - 2026-05-09
+
+### Zmieniono
+
+- **logowanie.php** - całkowity redesign formularzy logowania i rejestracji, nowoczesny design z gradient header, animowanymi tabami, zaokrąglonym przyciskiem
+- **admin_login.php** - redesign panelu admina, ciemny slate header z czerwonym badge, spójność z resztą aplikacji
+- **index-style.css** - usunięto stare style auth (dublowane), kod uporządkowany
+
+### Dodano
+
+- **logowanie-style.css** - dedykowany plik CSS dla logowania/rejestracji, font Source Sans 3, responsywny design
+- **admin_login-style.css** - dedykowany plik CSS dla panelu admina
+- mechanizm ukrytego dostępu do panelu admina (5 kliknięć w logo)
+- footer na stronach logowania spójny z resztą aplikacji
+
+### Poprawki
+
+- naprawiono błędy JavaScript w logowanie.php (id triggera)
+- dodano obsługę polskich znaków w alertach (SVG ikony)
+- wszystkie strony PHP przetestowane pod kątem błędów składniowych
+
 ## [1.2.0] - 2026-05-05
 
 ### Zmieniono

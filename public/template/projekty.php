@@ -62,6 +62,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
 <head>
     <meta charset="UTF-8">
     <title>EduŚcieżka - Projekty</title>
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/projekty-style.css">
 </head>
 

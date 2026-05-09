@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+:root {
+  --primary: #2a95ff;
+  --secondary: #f1f8ff;
+  --white: #ffffff;
+  --shadow: rgb(204, 204, 204);
+  --span: #4aa4ff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Source Sans 3', sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100%;
+  padding: 16px 20px;
+  box-shadow: 0 5px 5px -2px var(--shadow);
+  background-color: var(--white);
+}
+
+.navigation ul {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  list-style-type: none;
+}
+
+.navigation li {
+  margin: 0 30px;
+}
+
+.navigation a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  font-size: 1.3em;
+  transition: 0.3s;
+  min-height: 46px;
+}
+
+#nav-title-flex {
+  margin-right: auto;
+}
+
+#nav-title {
+  color: var(--primary);
+  font-size: 1.5em;
+}
+
+.navigation a:hover {
+  cursor: pointer;
+  color: var(--primary);
+}
+
+.navigation .nav-button {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.navigation .nav-button:hover {
+  background-color: var(--white);
+  color: var(--primary);
+  box-shadow: 0 0 5px var(--shadow);
+}

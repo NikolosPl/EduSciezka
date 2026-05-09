@@ -25,6 +25,7 @@ $liczba_logow = mysqli_num_rows($wynik);
 <head>
     <meta charset="UTF-8">
     <title>EduŚcieżka - Log Sukcesu</title>
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/logi-style.css">
 </head>
 
@@ -79,7 +80,8 @@ $liczba_logow = mysqli_num_rows($wynik);
                             <td><span class="typ-badge"><?php echo $log['typ']; ?></span></td>
                             <td class="xp">+<?php echo $log['punkty_xp']; ?> XP</td>
                             <td style="font-size:12px;color:#6b7280">
-                                <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?></td>
+                                <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?>
+                            </td>
                         </tr>
                     <?php endwhile; ?>
                 </table>

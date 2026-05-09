@@ -1,6 +1,49 @@
 <?php
 require_once "polaczenie.php";
 
+function zaladuj_env($sciezka)
+{
+    if (!is_file($sciezka) || !is_readable($sciezka)) {
+        return;
+    }
+
+    $linie = file($sciezka, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    if (!$linie) {
+        return;
+    }
+
+    foreach ($linie as $linia) {
+        $linia = trim($linia);
+        if ($linia === '' || strpos($linia, '#') === 0) {
+            continue;
+        }
+
+        $pozycja = strpos($linia, '=');
+        if ($pozycja === false) {
+            continue;
+        }
+
+        $klucz = trim(substr($linia, 0, $pozycja));
+        $wartosc = trim(substr($linia, $pozycja + 1));
+
+        if ($klucz === '') {
+            continue;
+        }
+
+        $obecna = getenv($klucz);
+        if ($obecna !== false && $obecna !== '') {
+            continue;
+        }
+
+        $wartosc = trim($wartosc, "\"'");
+        putenv($klucz . '=' . $wartosc);
+        $_ENV[$klucz] = $wartosc;
+        $_SERVER[$klucz] = $wartosc;
+    }
+}
+
+zaladuj_env(__DIR__ . '/../../.env');
+
 if (isset($_GET['wyloguj'])) {
     unset($_SESSION['admin']);
     header("Location: admin_login.php");
@@ -15,13 +58,13 @@ if (isset($_SESSION['admin'])) {
 $blad = "";
 
 if (isset($_POST['zaloguj'])) {
-    $admin_haslo = "admin123";
+    $admin_haslo = getenv('EDUSCIEZKA_ADMIN_PASSWORD') ?: '';
     if ($_POST['haslo'] === $admin_haslo) {
         $_SESSION['admin'] = true;
         header("Location: admin.php");
         exit;
     } else {
-        $blad = "Nieprawidlowe haslo admina.";
+        $blad = "Nieprawidłowe hasło administratora.";
     }
 }
 ?>
@@ -30,29 +73,48 @@ if (isset($_POST['zaloguj'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>EduSciezka - Logowanie Admina</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduŚcieżka - Panel Admina</title>
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/admin_login-style.css">
 </head>
 
 <body>
-    <div class="box">
-        <div class="naglowek">
-            <h1>EduSciezka</h1>
+    <div class="admin-card">
+        <div class="admin-header">
+            <h1>EduŚcieżka</h1>
             <p>Panel Administratora</p>
-            <div class="badge">Dostep tylko dla administratorow</div>
+            <span class="admin-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+                Dostęp tylko dla administratorów
+            </span>
         </div>
-        <div class="tresc">
+        <div class="admin-body">
             <?php if ($blad): ?>
-                <div class="blad"><?php echo htmlspecialchars($blad); ?></div>
+                <div class="alert alert-error">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    <?php echo htmlspecialchars($blad); ?>
+                </div>
             <?php endif; ?>
             <form method="POST">
-                <div class="pole">
-                    <label>Haslo administratora</label>
-                    <input type="password" name="haslo" placeholder="Wpisz haslo admina" required autofocus>
+                <div class="form-group">
+                    <label for="password">Hasło administratora</label>
+                    <input type="password" id="password" name="haslo" placeholder="Wpisz hasło admina" required autofocus>
                 </div>
-                <button type="submit" name="zaloguj" class="btn">Zaloguj jako Admin</button>
+                <button type="submit" name="zaloguj" class="btn-admin">Zaloguj się jako Admin</button>
             </form>
-            <div class="link-powrot"><a href="logowanie.php">&larr; Powrot do logowania</a></div>
+            <div class="link-back">
+                <a href="logowanie.php">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                    </svg>
+                    Powrót do logowania
+                </a>
+            </div>
         </div>
     </div>
 </body>

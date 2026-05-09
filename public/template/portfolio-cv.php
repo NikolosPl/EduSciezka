@@ -37,6 +37,7 @@ $drukuj = isset($_GET['print']) && $_GET['print'] === '1';
 <head>
     <meta charset="UTF-8">
     <title>EduSciezka - Portfolio i CV</title>
+    <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <style>
         * {
             box-sizing: border-box;
