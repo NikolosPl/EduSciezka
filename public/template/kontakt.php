@@ -1,4 +1,6 @@
 <?php
+require_once "security.php";
+
 $komunikat_typ = "";
 $komunikat_tresc = "";
 
@@ -198,6 +200,14 @@ function wyslij_mail_fallback($replyToEmail, $subject, $body)
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    edusciezka_require_csrf();
+    $limit = edusciezka_rate_limit('kontakt:' . edusciezka_request_ip(), 3, 1800);
+    if (!$limit['allowed']) {
+        $komunikat_typ = 'blad';
+        $komunikat_tresc = 'Za duzo wiadomosci. Sprobuj ponownie pozniej.';
+    }
+
+    if ($komunikat_tresc === '') {
     $imie_nazwisko = trim((string) ($_POST['iminaz'] ?? ''));
     $email = trim((string) ($_POST['email'] ?? ''));
     $tresc = trim((string) ($_POST['tresc'] ?? ''));
@@ -256,6 +266,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $komunikat_typ = 'blad';
         $komunikat_tresc = implode(' ', $bledy);
     }
+    }
 }
 ?>
 <!doctype html>
@@ -301,12 +312,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php if ($komunikat_tresc !== ''): ?>
                     <div
                         class="komunikat <?php echo $komunikat_typ === 'sukces' ? 'komunikat-sukces' : 'komunikat-blad'; ?>">
-                        <?php echo htmlspecialchars($komunikat_tresc); ?>
+                        <?php echo edusciezka_e($komunikat_tresc); ?>
                     </div>
                 <?php endif; ?>
 
                 <div class="contact-info-form">
                     <form action="kontakt.php" method="post" novalidate>
+                        <?php echo edusciezka_csrf_input(); ?>
                         <div class="hp-wrap" aria-hidden="true">
                             <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"
                                 aria-label="Pole techniczne" />

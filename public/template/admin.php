@@ -7,17 +7,18 @@ if (!isset($_SESSION['admin'])) {
 }
 
 $komunikat = "";
-
-// Usun uzytkownika
+ 
 if (isset($_GET['usun_uzyt']) && is_numeric($_GET['usun_uzyt'])) {
+    edusciezka_require_csrf();
     $id = (int) $_GET['usun_uzyt'];
     mysqli_query($polaczenie, "DELETE FROM uzytkownicy WHERE id = $id");
     header("Location: admin.php?msg=sukces:Uzytkownik usuniety.");
     exit;
 }
 
-// Usun zadanie
+ 
 if (isset($_GET['usun_zad']) && is_numeric($_GET['usun_zad'])) {
+    edusciezka_require_csrf();
     $id = (int) $_GET['usun_zad'];
     mysqli_query($polaczenie, "DELETE FROM zadania WHERE id = $id");
     header("Location: admin.php?msg=sukces:Zadanie usuniete.");
@@ -65,9 +66,9 @@ $r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM logi_sukce
 $stat_logi = $r[0];
 
 if (isset($_GET['usun_ogloszenie']) && is_numeric($_GET['usun_ogloszenie'])) {
+    edusciezka_require_csrf();
     $id = (int) $_GET['usun_ogloszenie'];
 
-    // Najpierw sprawdzamy czy jest zdjęcie, żeby je skasować z dysku
     $stare_foto = mysqli_query($polaczenie, "SELECT zdjecie FROM ogloszenia WHERE id = $id");
     $foto_data = mysqli_fetch_assoc($stare_foto);
 
@@ -106,45 +107,44 @@ function oczysc_tresc_ogloszenia($tekst)
     $tekst = preg_replace('/\s+/u', ' ', $tekst);
     return trim($tekst);
 }
-
-// 2. LOGIKA DODAWANIA OGŁOSZENIA
+ 
 if (isset($_POST['dodaj_ogloszenie'])) {
-    // Zabezpieczamy tekst
     $tytul = mysqli_real_escape_string($polaczenie, $_POST['ogloszenie_tytul']);
     $tresc_raw = $_POST['ogloszenie_tresc'];
     $tresc_czysta = oczysc_tresc_ogloszenia($tresc_raw);
     $tresc = mysqli_real_escape_string($polaczenie, $tresc_czysta);
 
-    // AUTOMATYCZNY KRÓTKI OPIS (skracanie do 100 znaków z treści głównej)
     $skrocony = mb_substr($tresc_czysta, 0, 140);
     $krotki_opis = mysqli_real_escape_string($polaczenie, $skrocony);
 
     $data_dodania = date("Y-m-d");
-    $nazwa_foto = ""; // Domyślnie puste
+    $nazwa_foto = "";
     $blad_pliku = false;
-
-    // OBSŁUGA ZDJĘCIA + ZABEZPIECZENIA
+    
     if (isset($_FILES['ogloszenie_foto']) && $_FILES['ogloszenie_foto']['error'] == 0) {
         $file = $_FILES['ogloszenie_foto'];
         $upload_dir = "../uploads/ogloszenia/";
-
-        // Sprawdzamy typ MIME (czy to na pewno obrazek)
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $file['tmp_name']);
+        $mime = '';
+        if (class_exists('finfo')) {
+            $finfo = new finfo(FILEINFO_MIME_TYPE);
+            $mime = $finfo->file($file['tmp_name']);
+            unset($finfo);
+        } elseif (function_exists('mime_content_type')) {
+            $mime = mime_content_type($file['tmp_name']);
+        }
         $dozwolone_mimes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
 
-        // Sprawdzamy rozszerzenie
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $dozwolone_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
         if (!in_array($mime, $dozwolone_mimes) || !in_array($ext, $dozwolone_ext)) {
             $komunikat = "blad:Nieprawidłowy format zdjęcia (tylko JPG, PNG, WEBP).";
             $blad_pliku = true;
-        } elseif ($file['size'] > 2 * 1024 * 1024) { // Max 2MB
+        } elseif ($file['size'] > 2 * 1024 * 1024) {
             $komunikat = "blad:Zdjęcie jest za duże (max 2MB).";
             $blad_pliku = true;
         } else {
-            // Generujemy unikalną, bezpieczną nazwę
+            $nazwa_foto = bin2hex(random_bytes(8)) . "." . $ext;
             $nazwa_foto = bin2hex(random_bytes(8)) . "." . $ext;
 
             if (!is_dir($upload_dir))
@@ -155,10 +155,10 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                 $blad_pliku = true;
             }
         }
-        finfo_close($finfo);
+        // $finfo was unset after use or not available; nothing to close when using OO finfo or mime_content_type
     }
 
-    // ZAPIS DO BAZY (jeśli nie było błędów z plikiem)
+    
     if ($tresc_czysta === '') {
         $komunikat = "blad:Treść ogłoszenia jest pusta lub zawiera niedozwolony fragment kodu.";
         $blad_pliku = true;
@@ -241,6 +241,7 @@ if (isset($_POST['dodaj_ogloszenie'])) {
 
             <div class="formularz-admin">
                 <form action="admin.php" method="POST" enctype="multipart/form-data">
+                    <?php echo edusciezka_csrf_input(); ?>
                     <div class="rzad-pol">
                         <div class="pole">
                             <label>Tytuł ogłoszenia</label>
@@ -285,7 +286,7 @@ if (isset($_POST['dodaj_ogloszenie'])) {
             </div>
 
 
-            <!-- UZYTKOWNICY -->
+
             <div class="sekcja" id="uzytkownicy">
                 <div class="sekcja-naglowek">
                     <h2>Użytkownicy systemu</h2>
@@ -314,7 +315,8 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                                     <?php echo $u['ostatnie_logowanie'] ? date('d.m.Y H:i', strtotime($u['ostatnie_logowanie'])) : 'Nigdy'; ?>
                                 </td>
                                 <td>
-                                    <a href="admin.php?usun_uzyt=<?php echo $u['id']; ?>" class="akcja akcja-usun"
+                                    <a href="<?php echo edusciezka_e(edusciezka_csrf_url('admin.php?usun_uzyt=' . (int) $u['id'])); ?>"
+                                        class="akcja akcja-usun"
                                         onclick="return confirm('Usunac uzytkownika i wszystkie jego dane?')">Usun</a>
                                 </td>
                             </tr>
@@ -323,7 +325,7 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                 <?php endif; ?>
             </div>
 
-            <!-- ZADANIA -->
+
             <div class="sekcja" id="zadania">
                 <div class="sekcja-naglowek">
                     <h2>Zadania wszystkich użytkowników (ostatnie 30)</h2>
@@ -350,21 +352,21 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                                     <?php echo $z['kat_nazwa'] ? htmlspecialchars($z['kat_nazwa']) : '—'; ?>
                                 </td>
                                 <td><span
-                                        class="priorytet priorytet-<?php echo $z['priorytet']; ?>"><?php echo ucfirst($z['priorytet']); ?></span>
+                                        class="priorytet priorytet-<?php echo edusciezka_e($z['priorytet']); ?>"><?php echo htmlspecialchars(ucfirst($z['priorytet'])); ?></span>
                                 </td>
                                 <td>
-                                    <span class="status status-<?php echo $z['status']; ?>">
+                                    <span class="status status-<?php echo edusciezka_e($z['status']); ?>">
                                         <?php
                                         $s = array('do_zrobienia' => 'Do zrobienia', 'w_toku' => 'W toku', 'zakonczone' => 'Ukonczone');
-                                        echo isset($s[$z['status']]) ? $s[$z['status']] : $z['status'];
+                                        echo htmlspecialchars(isset($s[$z['status']]) ? $s[$z['status']] : $z['status']);
                                         ?>
                                     </span>
                                 </td>
                                 <td style="font-size:12px;color:#6b7280"><?php echo date('d.m.Y', strtotime($z['deadline'])); ?>
                                 </td>
                                 <td>
-                                    <a href="admin.php?usun_zad=<?php echo $z['id']; ?>" class="akcja akcja-usun"
-                                        onclick="return confirm('Usunac to zadanie?')">Usun</a>
+                                    <a href="<?php echo edusciezka_e(edusciezka_csrf_url('admin.php?usun_zad=' . (int) $z['id'])); ?>"
+                                        class="akcja akcja-usun" onclick="return confirm('Usunac to zadanie?')">Usun</a>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
@@ -372,7 +374,7 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                 <?php endif; ?>
             </div>
 
-            <!-- LOGI SUKCESU -->
+
             <div class="sekcja" id="logi">
                 <div class="sekcja-naglowek">
                     <h2>Logi sukcesu (ostatnie 20)</h2>
@@ -394,7 +396,7 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                                 <td style="font-size:12px">
                                     <?php echo htmlspecialchars($log['imie'] . ' ' . $log['nazwisko']); ?>
                                 </td>
-                                <td><span class="typ-badge"><?php echo $log['typ']; ?></span></td>
+                                <td><span class="typ-badge"><?php echo edusciezka_e($log['typ']); ?></span></td>
                                 <td class="xp">+<?php echo $log['punkty_xp']; ?> XP</td>
                                 <td style="font-size:12px;color:#6b7280">
                                     <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?>

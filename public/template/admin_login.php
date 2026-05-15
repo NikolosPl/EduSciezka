@@ -56,10 +56,18 @@ if (isset($_SESSION['admin'])) {
 }
 
 $blad = "";
+$csrf_token = edusciezka_csrf_token();
 
 if (isset($_POST['zaloguj'])) {
+    edusciezka_require_csrf();
+    $limit = edusciezka_rate_limit('admin-login:' . edusciezka_request_ip(), 5, 900);
+    if (!$limit['allowed']) {
+        $blad = 'Za duzo prob logowania administratora. Sprobuj ponownie pozniej.';
+    }
+
     $admin_haslo = getenv('EDUSCIEZKA_ADMIN_PASSWORD') ?: '';
-    if ($_POST['haslo'] === $admin_haslo) {
+    if ($blad === '' && $_POST['haslo'] === $admin_haslo) {
+        session_regenerate_id(true);
         $_SESSION['admin'] = true;
         header("Location: admin.php");
         exit;
@@ -101,6 +109,7 @@ if (isset($_POST['zaloguj'])) {
                 </div>
             <?php endif; ?>
             <form method="POST">
+                <?php echo edusciezka_csrf_input(); ?>
                 <div class="form-group">
                     <label for="password">Hasło administratora</label>
                     <input type="password" id="password" name="haslo" placeholder="Wpisz hasło admina" required autofocus>

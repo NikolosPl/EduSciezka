@@ -96,6 +96,7 @@ $etapy_dozwolone = array('szkola_koniec', 'studia', 'brak_studiow', 'praca', 'ce
 $statusy_dozwolone = array('plan', 'w_toku', 'zakonczone');
 
 if (isset($_POST['generuj_autoplan'])) {
+    edusciezka_require_csrf();
     $auto_cel = trim((string) ($_POST['auto_cel'] ?? ''));
     $auto_sciezka = (string) ($_POST['auto_sciezka'] ?? 'mieszana');
     $auto_start = (string) ($_POST['auto_start'] ?? '');
@@ -148,6 +149,7 @@ if (isset($_POST['generuj_autoplan'])) {
 }
 
 if (isset($_POST['licz_symulacje'])) {
+    edusciezka_require_csrf();
     $horyzont_lat = max(2, min(10, (int) ($_POST['sim_horyzont_lat'] ?? 5)));
     $lata_studiow = max(1, min(6, (int) ($_POST['sim_lata_studiow'] ?? 3)));
     $koszt_studia_msc = max(0, (float) ($_POST['sim_koszt_studia_msc'] ?? 1200));
@@ -218,6 +220,7 @@ if (isset($_GET['edytuj']) && is_numeric($_GET['edytuj'])) {
 }
 
 if (isset($_POST['dodaj_plan']) || isset($_POST['zapisz_edycje'])) {
+    edusciezka_require_csrf();
     $etap = isset($_POST['etap']) ? mysqli_real_escape_string($polaczenie, $_POST['etap']) : '';
     $tytul = isset($_POST['tytul']) ? mysqli_real_escape_string($polaczenie, trim($_POST['tytul'])) : '';
     $opis = isset($_POST['opis']) ? mysqli_real_escape_string($polaczenie, trim($_POST['opis'])) : '';
@@ -264,6 +267,7 @@ if (isset($_POST['dodaj_plan']) || isset($_POST['zapisz_edycje'])) {
 }
 
 if (isset($_GET['zmien_status']) && is_numeric($_GET['zmien_status']) && isset($_GET['status'])) {
+    edusciezka_require_csrf();
     $id = (int) $_GET['zmien_status'];
     $status = mysqli_real_escape_string($polaczenie, $_GET['status']);
 
@@ -275,6 +279,7 @@ if (isset($_GET['zmien_status']) && is_numeric($_GET['zmien_status']) && isset($
 }
 
 if (isset($_GET['usun']) && is_numeric($_GET['usun'])) {
+    edusciezka_require_csrf();
     $id = (int) $_GET['usun'];
     mysqli_query($polaczenie, "DELETE FROM planer_przyszlosci WHERE id = $id AND uzytkownik_id = $uid");
     header('Location: planer-przyszlosci.php?msg=sukces: Etap został usunięty.');
@@ -517,7 +522,7 @@ $etykiety_etapow = array(
 
 <head>
     <meta charset="UTF-8">
-    <title>EduŚcieżka - Planer przyszlosci</title>
+    <title>EduŚcieżka - Planer Przyszłości</title>
     <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/planer-przyszlosci-style.css">
 </head>
@@ -536,7 +541,7 @@ $etykiety_etapow = array(
         <a href="dashboard.php">Dashboard</a>
         <a href="logi.php">Log Sukcesu</a>
         <a href="projekty.php">Projekty</a>
-        <a href="planer-przyszlosci.php" class="aktywny">Planer przyszłości</a>
+        <a href="planer-przyszlosci.php" class="aktywny">Planer Przyszłości</a>
     </div>
 
     <div class="tresc">
@@ -582,6 +587,7 @@ $etykiety_etapow = array(
             </div>
             <div class="formularz-dodaj">
                 <form method="POST">
+                    <?php echo edusciezka_csrf_input(); ?>
                     <div class="rzad-pol">
                         <div class="pole">
                             <label>Główny cel *</label>
@@ -626,7 +632,7 @@ $etykiety_etapow = array(
             </div>
             <div class="risk-wrap">
                 <?php foreach ($alarmy_ryzyka as $alarm): ?>
-                    <div class="risk-item risk-<?php echo $alarm['typ']; ?>">
+                    <div class="risk-item risk-<?php echo edusciezka_e($alarm['typ']); ?>">
                         <strong><?php echo htmlspecialchars($alarm['tytul']); ?></strong>
                         <div><?php echo htmlspecialchars($alarm['akcja']); ?></div>
                     </div>
@@ -664,6 +670,7 @@ $etykiety_etapow = array(
             </div>
             <div class="formularz-dodaj">
                 <form method="POST">
+                    <?php echo edusciezka_csrf_input(); ?>
                     <div class="rzad-pol">
                         <div class="pole">
                             <label>Horyzont (lata)</label>
@@ -749,6 +756,7 @@ $etykiety_etapow = array(
 
             <div class="formularz-dodaj widoczny">
                 <form method="POST">
+                    <?php echo edusciezka_csrf_input(); ?>
                     <?php if ($plan_do_edycji): ?>
                         <input type="hidden" name="plan_id" value="<?php echo (int) $plan_do_edycji['id']; ?>">
                     <?php endif; ?>
@@ -828,7 +836,7 @@ $etykiety_etapow = array(
                             ?>
                             <tr>
                                 <td>
-                                    <span class="etap-badge etap-<?php echo $plan['etap']; ?>">
+                                    <span class="etap-badge etap-<?php echo edusciezka_e($plan['etap']); ?>">
                                         <?php echo htmlspecialchars($etykiety_etapow[$plan['etap']]); ?>
                                     </span>
                                 </td>
@@ -845,27 +853,28 @@ $etykiety_etapow = array(
                                     <?php endif; ?>
                                 </td>
                                 <td>
-                                    <span class="status status-<?php echo $plan['status']; ?>">
-                                        <?php echo $statusy[$plan['status']]; ?>
+                                    <span class="status status-<?php echo edusciezka_e($plan['status']); ?>">
+                                        <?php echo htmlspecialchars($statusy[$plan['status']]); ?>
                                     </span>
                                 </td>
                                 <td>
                                     <a class="akcja akcja-edytuj"
-                                        href="planer-przyszlosci.php?edytuj=<?php echo $plan['id']; ?>">Edytuj</a>
+                                        href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?edytuj=' . (int) $plan['id'])); ?>">Edytuj</a>
                                     <?php if ($plan['status'] != 'w_toku'): ?>
                                         <a class="akcja akcja-wtoku"
-                                            href="planer-przyszlosci.php?zmien_status=<?php echo $plan['id']; ?>&status=w_toku">W
+                                            href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=w_toku')); ?>">W
                                             toku</a>
                                     <?php endif; ?>
                                     <?php if ($plan['status'] != 'zakonczone'): ?>
                                         <a class="akcja akcja-zakoncz"
-                                            href="planer-przyszlosci.php?zmien_status=<?php echo $plan['id']; ?>&status=zakonczone">Zakończ</a>
+                                            href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=zakonczone')); ?>">Zakończ</a>
                                     <?php endif; ?>
                                     <?php if ($plan['status'] != 'plan'): ?>
                                         <a class="akcja akcja-plan"
-                                            href="planer-przyszlosci.php?zmien_status=<?php echo $plan['id']; ?>&status=plan">Plan</a>
+                                            href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=plan')); ?>">Plan</a>
                                     <?php endif; ?>
-                                    <a class="akcja akcja-usun" href="planer-przyszlosci.php?usun=<?php echo $plan['id']; ?>"
+                                    <a class="akcja akcja-usun"
+                                        href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?usun=' . (int) $plan['id'])); ?>"
                                         onclick="return confirm('Usunac ten etap?')">Usuń</a>
                                 </td>
                             </tr>
@@ -902,121 +911,8 @@ $etykiety_etapow = array(
         </div>
     </div>
 
-    <script>
-        const wydarzenia = <?php echo $kalendarz_json ? $kalendarz_json : '[]'; ?>;
-        const nazwyMiesiecy = [
-            'Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec',
-            'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień'
-        ];
-
-        let widok = new Date();
-
-        function pad(v) {
-            return String(v).padStart(2, '0');
-        }
-
-        function dataKlucz(y, m, d) {
-            return y + '-' + pad(m + 1) + '-' + pad(d);
-        }
-
-        function wydarzeniaDnia(klucz) {
-            const fPlaner = document.getElementById('filtr-planer').checked;
-            const fZadanie = document.getElementById('filtr-zadanie').checked;
-            const fTermin = document.getElementById('filtr-termin').checked;
-            const fZak = document.getElementById('filtr-zakonczone').checked;
-
-            return wydarzenia.filter(function (ev) {
-                if (ev.source === 'planer' && !fPlaner) return false;
-                if (ev.source === 'zadanie' && !fZadanie) return false;
-                if (ev.source === 'termin' && !fTermin) return false;
-                if (!fZak && ev.status === 'zakonczone') return false;
-                const start = ev.start;
-                const end = ev.end || ev.start;
-                return klucz >= start && klucz <= end;
-            });
-        }
-
-        function renderKalendarz() {
-            const rok = widok.getFullYear();
-            const miesiac = widok.getMonth();
-
-            document.getElementById('monthLabel').textContent = nazwyMiesiecy[miesiac] + ' ' + rok;
-
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = '';
-
-            ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Niedż'].forEach(function (dzien) {
-                const nag = document.createElement('div');
-                nag.className = 'dow';
-                nag.textContent = dzien;
-                grid.appendChild(nag);
-            });
-
-            const pierwszy = new Date(rok, miesiac, 1);
-            const przesuniecie = (pierwszy.getDay() + 6) % 7;
-            const dniWmiesiacu = new Date(rok, miesiac + 1, 0).getDate();
-
-            for (let i = 0; i < przesuniecie; i++) {
-                const pusty = document.createElement('div');
-                pusty.className = 'day empty';
-                grid.appendChild(pusty);
-            }
-
-            const dzisiaj = new Date();
-            const dzKlucz = dataKlucz(dzisiaj.getFullYear(), dzisiaj.getMonth(), dzisiaj.getDate());
-
-            for (let d = 1; d <= dniWmiesiacu; d++) {
-                const klucz = dataKlucz(rok, miesiac, d);
-                const komorka = document.createElement('div');
-                komorka.className = 'day';
-                if (klucz === dzKlucz) {
-                    komorka.className += ' today';
-                }
-
-                const numer = document.createElement('div');
-                numer.className = 'day-number';
-                numer.textContent = d;
-                komorka.appendChild(numer);
-
-                const lista = document.createElement('div');
-                lista.className = 'events';
-
-                const evDnia = wydarzeniaDnia(klucz);
-                evDnia.slice(0, 3).forEach(function (ev) {
-                    const e = document.createElement('div');
-                    e.className = 'event event-' + ev.source;
-                    e.textContent = ev.title;
-                    lista.appendChild(e);
-                });
-
-                if (evDnia.length > 3) {
-                    const wiecej = document.createElement('div');
-                    wiecej.className = 'more-events';
-                    wiecej.textContent = '+' + (evDnia.length - 3) + ' wiecej';
-                    lista.appendChild(wiecej);
-                }
-
-                komorka.appendChild(lista);
-                grid.appendChild(komorka);
-            }
-        }
-
-        document.getElementById('prevMonth').addEventListener('click', function () {
-            widok = new Date(widok.getFullYear(), widok.getMonth() - 1, 1);
-            renderKalendarz();
-        });
-
-        document.getElementById('nextMonth').addEventListener('click', function () {
-            widok = new Date(widok.getFullYear(), widok.getMonth() + 1, 1);
-            renderKalendarz();
-        });
-
-        ['filtr-planer', 'filtr-zadanie', 'filtr-termin', 'filtr-zakonczone'].forEach(function (id) {
-            document.getElementById(id).addEventListener('change', renderKalendarz);
-        });
-
-        renderKalendarz();
-    </script>
+    <script id="kalendarz-data" type="application/json"><?php echo $kalendarz_json ? $kalendarz_json : '[]'; ?></script>
+    <script src="../js/planer.js"></script>
 
 </body>
 

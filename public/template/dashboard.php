@@ -11,14 +11,13 @@ $imie = $_SESSION['imie'];
 
 $komunikat = "";
 
-// Dodaj brakującą kolumnę dla daty startowej, jeśli baza ma starszy schemat
 $kolumna_data_start = mysqli_query($polaczenie, "SHOW COLUMNS FROM zadania LIKE 'data_start'");
 if ($kolumna_data_start && mysqli_num_rows($kolumna_data_start) == 0) {
     mysqli_query($polaczenie, "ALTER TABLE zadania ADD COLUMN data_start date DEFAULT NULL AFTER opis");
 }
 
-// Dodaj zadanie
 if (isset($_POST['dodaj_zadanie'])) {
+    edusciezka_require_csrf();
     $tytul = mysqli_real_escape_string($polaczenie, $_POST['tytul']);
     $opis = mysqli_real_escape_string($polaczenie, $_POST['opis']);
     $data_start = mysqli_real_escape_string($polaczenie, $_POST['data_start'] ?? '');
@@ -37,8 +36,8 @@ if (isset($_POST['dodaj_zadanie'])) {
     }
 }
 
-// Dodaj termin szkolny
 if (isset($_POST['dodaj_termin'])) {
+    edusciezka_require_csrf();
     $przedmiot = mysqli_real_escape_string($polaczenie, $_POST['przedmiot']);
     $typ = mysqli_real_escape_string($polaczenie, $_POST['typ']);
     $opis = mysqli_real_escape_string($polaczenie, $_POST['opis']);
@@ -55,8 +54,8 @@ if (isset($_POST['dodaj_termin'])) {
     }
 }
 
-// Ukoncz zadanie
 if (isset($_GET['ukoncz']) && is_numeric($_GET['ukoncz'])) {
+    edusciezka_require_csrf();
     $zid = (int) $_GET['ukoncz'];
     $wynik = mysqli_query($polaczenie, "SELECT id, tytul FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
     if (mysqli_num_rows($wynik) == 1) {
@@ -70,8 +69,8 @@ if (isset($_GET['ukoncz']) && is_numeric($_GET['ukoncz'])) {
     }
 }
 
-// Przestaw zadanie na "w toku"
 if (isset($_GET['w_toku']) && is_numeric($_GET['w_toku'])) {
+    edusciezka_require_csrf();
     $zid = (int) $_GET['w_toku'];
     $wynik = mysqli_query($polaczenie, "SELECT id FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
     if (mysqli_num_rows($wynik) == 1) {
@@ -81,16 +80,16 @@ if (isset($_GET['w_toku']) && is_numeric($_GET['w_toku'])) {
     }
 }
 
-// Usun zadanie
 if (isset($_GET['usun']) && is_numeric($_GET['usun'])) {
+    edusciezka_require_csrf();
     $zid = (int) $_GET['usun'];
     mysqli_query($polaczenie, "DELETE FROM zadania WHERE id = $zid AND uzytkownik_id = $uid");
     header("Location: dashboard.php?msg=sukces: Zadanie zostało usunięte.");
     exit;
 }
 
-// Zalicz termin szkolny
 if (isset($_GET['zalicz_termin']) && is_numeric($_GET['zalicz_termin'])) {
+    edusciezka_require_csrf();
     $tid = (int) $_GET['zalicz_termin'];
     $wynik = mysqli_query($polaczenie, "SELECT id, przedmiot FROM terminy_szkolne WHERE id = $tid AND uzytkownik_id = $uid");
     if (mysqli_num_rows($wynik) == 1) {
@@ -107,7 +106,7 @@ if (isset($_GET['zalicz_termin']) && is_numeric($_GET['zalicz_termin'])) {
 if (isset($_GET['msg']))
     $komunikat = $_GET['msg'];
 
-// Automatycznie startuj zadania, gdy nadejdzie data startowa
+
 mysqli_query(
     $polaczenie,
     "UPDATE zadania
@@ -118,7 +117,6 @@ mysqli_query(
              AND data_start <= CURDATE()"
 );
 
-// Pobierz zadania
 $wynik_zadan = mysqli_query(
     $polaczenie,
     "SELECT z.*, k.nazwa AS kategoria_nazwa, k.kolor_hex
@@ -128,7 +126,6 @@ $wynik_zadan = mysqli_query(
      ORDER BY z.deadline ASC"
 );
 
-// Pobierz terminy szkolne
 $wynik_terminow = mysqli_query(
     $polaczenie,
     "SELECT * FROM terminy_szkolne
@@ -136,7 +133,6 @@ $wynik_terminow = mysqli_query(
      ORDER BY data_termin ASC"
 );
 
-// Pobierz ostatnie logi sukcesu
 $wynik_logow = mysqli_query(
     $polaczenie,
     "SELECT * FROM logi_sukcesow
@@ -145,10 +141,8 @@ $wynik_logow = mysqli_query(
      LIMIT 5"
 );
 
-// Pobierz kategorie do formularza
 $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY nazwa");
 
-// Statystyki
 $r = mysqli_fetch_row(mysqli_query($polaczenie, "SELECT COUNT(*) FROM zadania WHERE uzytkownik_id = $uid AND status = 'do_zrobienia'"));
 $stat_todo = $r[0];
 
@@ -202,7 +196,7 @@ $stat_logi = $r[0];
         }
         ?>
 
-        <!-- STATYSTYKI -->
+
         <div class="statystyki">
             <div class="karta-stat">
                 <div class="liczba"><?php echo $stat_todo; ?></div>
@@ -222,7 +216,7 @@ $stat_logi = $r[0];
             </div>
         </div>
 
-        <!-- ZADANIA -->
+
         <div class="sekcja">
             <div class="sekcja-naglowek">
                 <h2>Moje Zadania</h2>
@@ -232,6 +226,7 @@ $stat_logi = $r[0];
             <div class="formularz-dodaj" id="form-zadanie">
                 <h3>Nowe zadanie</h3>
                 <form method="POST">
+                    <?php echo edusciezka_csrf_input(); ?>
                     <div class="rzad-pol">
                         <div class="pole">
                             <label>Tytuł <span class="req">*</span></label>
@@ -313,22 +308,23 @@ $stat_logi = $r[0];
                                 </td>
                                 <td>
                                     <?php if ($zad['kategoria_nazwa']): ?>
-                                        <span class="kropka-kategorii" style="background:<?php echo $zad['kolor_hex']; ?>"></span>
+                                        <span class="kropka-kategorii"
+                                            style="background:<?php echo edusciezka_e($zad['kolor_hex']); ?>"></span>
                                         <?php echo htmlspecialchars($zad['kategoria_nazwa']); ?>
                                     <?php else:
                                         echo '—';
                                     endif; ?>
                                 </td>
                                 <td>
-                                    <span class="priorytet priorytet-<?php echo $klasa; ?>">
-                                        <?php echo ucfirst($zad['priorytet']); ?>
+                                    <span class="priorytet priorytet-<?php echo edusciezka_e($klasa); ?>">
+                                        <?php echo htmlspecialchars(ucfirst($zad['priorytet'])); ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="status status-<?php echo $klasa_statusu; ?>">
+                                    <span class="status status-<?php echo edusciezka_e($klasa_statusu); ?>">
                                         <?php
                                         $statusy = array('do_zrobienia' => 'Do zrobienia', 'w_toku' => 'W toku', 'zakończone' => 'Ukonczone');
-                                        echo isset($statusy[$zad['status']]) ? $statusy[$zad['status']] : $zad['status'];
+                                        echo htmlspecialchars(isset($statusy[$zad['status']]) ? $statusy[$zad['status']] : $zad['status']);
                                         ?>
                                     </span>
                                 </td>
@@ -355,12 +351,14 @@ $stat_logi = $r[0];
                                 <td>
                                     <?php if ($zad['status'] != 'zakończone'): ?>
                                         <?php if ($zad['status'] == 'do_zrobienia'): ?>
-                                            <a href="dashboard.php?w_toku=<?php echo $zad['id']; ?>" class="akcja akcja-ukoncz"
-                                                onclick="return confirm('Oznaczyć jako w toku?')">W toku</a>
+                                            <a href="<?php echo edusciezka_e(edusciezka_csrf_url('dashboard.php?w_toku=' . (int) $zad['id'])); ?>"
+                                                class="akcja akcja-ukoncz" onclick="return confirm('Oznaczyć jako w toku?')">W toku</a>
                                         <?php endif; ?>
-                                        <a href="dashboard.php?ukoncz=<?php echo $zad['id']; ?>" class="akcja akcja-ukoncz"
+                                        <a href="<?php echo edusciezka_e(edusciezka_csrf_url('dashboard.php?ukoncz=' . (int) $zad['id'])); ?>"
+                                            class="akcja akcja-ukoncz"
                                             onclick="return confirm('Oznaczyć jako ukończone?')">Ukończ</a>
-                                        <a href="dashboard.php?usun=<?php echo $zad['id']; ?>" class="akcja akcja-usun"
+                                        <a href="<?php echo edusciezka_e(edusciezka_csrf_url('dashboard.php?usun=' . (int) $zad['id'])); ?>"
+                                            class="akcja akcja-usun"
                                             onclick="return confirm('Czy na pewno usunąć to zadanie?')">Usuń</a>
                                     <?php endif; ?>
                                 </td>
@@ -371,7 +369,7 @@ $stat_logi = $r[0];
             </div>
         </div>
 
-        <!-- TERMINY SZKOLNE -->
+
         <div class="sekcja">
             <div class="sekcja-naglowek">
                 <h2>Terminy Szkolne</h2>
@@ -381,6 +379,7 @@ $stat_logi = $r[0];
             <div class="formularz-dodaj" id="form-termin">
                 <h3>Nowy termin szkolny</h3>
                 <form method="POST">
+                    <?php echo edusciezka_csrf_input(); ?>
                     <div class="rzad-pol">
                         <div class="pole">
                             <label>Przedmiot <span class="req">*</span></label>
@@ -438,7 +437,7 @@ $stat_logi = $r[0];
                                         <br><small style="color:#9ca3af"><?php echo htmlspecialchars($ter['opis']); ?></small>
                                     <?php endif; ?>
                                 </td>
-                                <td><span class="typ-terminu"><?php echo htmlspecialchars($ter['typ']); ?></span></td>
+                                <td><span class="typ-terminu"><?php echo edusciezka_e($ter['typ']); ?></span></td>
                                 <td style="font-size:12px">
                                     <?php echo htmlspecialchars($ter['nauczyciel'] ? $ter['nauczyciel'] : '—'); ?>
                                 </td>
@@ -454,7 +453,8 @@ $stat_logi = $r[0];
                                 </td>
                                 <td>
                                     <?php if (!$ter['zaliczone']): ?>
-                                        <a href="dashboard.php?zalicz_termin=<?php echo $ter['id']; ?>" class="akcja akcja-zalicz"
+                                        <a href="<?php echo edusciezka_e(edusciezka_csrf_url('dashboard.php?zalicz_termin=' . (int) $ter['id'])); ?>"
+                                            class="akcja akcja-zalicz"
                                             onclick="return confirm('Oznaczyc jako zaliczony?')">Zalicz</a>
                                     <?php endif; ?>
                                 </td>
@@ -465,7 +465,7 @@ $stat_logi = $r[0];
             </div>
         </div>
 
-        <!-- OSTATNIE LOGI SUKCESU -->
+
         <div class="sekcja">
             <div class="sekcja-naglowek">
                 <h2>Ostatnie sukcesy</h2>
@@ -485,7 +485,7 @@ $stat_logi = $r[0];
                         <?php while ($log = mysqli_fetch_assoc($wynik_logow)): ?>
                             <tr>
                                 <td><strong><?php echo htmlspecialchars($log['tytul']); ?></strong></td>
-                                <td><span class="typ-badge"><?php echo $log['typ']; ?></span></td>
+                                <td><span class="typ-badge"><?php echo edusciezka_e($log['typ']); ?></span></td>
                                 <td class="xp">+<?php echo $log['punkty_xp']; ?> XP</td>
                                 <td style="font-size:12px;color:#6b7280">
                                     <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?>
@@ -499,16 +499,7 @@ $stat_logi = $r[0];
 
     </div>
 
-    <script>
-        function przelaczForm(id) {
-            var el = document.getElementById(id);
-            if (el.className.indexOf('widoczny') === -1) {
-                el.className = 'formularz-dodaj widoczny';
-            } else {
-                el.className = 'formularz-dodaj';
-            }
-        }
-    </script>
+    <script src="../js/site-scripts.js"></script>
 
 </body>
 

@@ -1,5 +1,3 @@
-/* about title */
-
 .about {
   padding: 5em 3em;
   padding-top: 10em;
@@ -20,8 +18,6 @@
   background-color: #c2e1ff;
   margin: 1em auto;
 }
-
-/* steps */
 
 .steps {
   margin: 5em 0;
@@ -66,7 +62,6 @@
   margin: 5px 0;
 }
 
-/* ukryj linię przy ostatnim kroku */
 .step:last-child .step-line {
   display: none;
 }
@@ -83,8 +78,6 @@
 .step-right p {
   color: grey;
 }
-
-/* find cards */
 
 .find-cards {
   display: grid;
@@ -110,8 +103,6 @@
 .find-card path {
   fill: var(--primary);
 }
-
-/* faq */
 
 .faq {
   margin: 5em 0;
@@ -142,8 +133,6 @@
   background-color: #c2e1ff;
   margin: 1em auto;
 }
-
-/* footer */
 
 footer {
   display: flex;

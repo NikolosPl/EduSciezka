@@ -55,16 +55,16 @@
         return trim($tekst);
       }
 
-      // Pobieramy 7 najnowszych ogłoszeń
       require_once "polaczenie.php";
       $sql = "SELECT * FROM ogloszenia ORDER BY data_dodania DESC, id DESC LIMIT 7";
       $wynik = mysqli_query($polaczenie, $sql);
 
       if (mysqli_num_rows($wynik) > 0):
-        // 1. Pobieramy pierwszy (najnowszy) element dla dużego wyświetlania
+
+
         $najnowszy = mysqli_fetch_assoc($wynik);
 
-        // Ścieżka do zdjęcia (jeśli brak, dajemy zaślepkę)
+
         $foto_glowne = !empty($najnowszy['zdjecie']) ? "../uploads/ogloszenia/" . $najnowszy['zdjecie'] : "../img/prototyp-zdjecia.png";
         $opis_glowny = oczysc_tresc_ogloszenia($najnowszy['krotki_opis']);
         if ($opis_glowny === '') {
@@ -73,18 +73,19 @@
         ?>
 
         <div class="latest-info">
-          <img src="<?php echo $foto_glowne; ?>" alt="<?php echo htmlspecialchars($najnowszy['tytul']); ?>">
+          <img src="<?php echo edusciezka_e($foto_glowne); ?>" alt="<?php echo htmlspecialchars($najnowszy['tytul']); ?>">
           <div class="latest-info-text">
             <h3><?php echo htmlspecialchars($najnowszy['tytul']); ?></h3>
             <div class="line"></div>
             <p><?php echo htmlspecialchars($opis_glowny); ?></p>
-            <a class="czytaj-dalej" href="ogloszenie.php?id=<?php echo $najnowszy['id']; ?>">Czytaj dalej</a>
+            <a class="czytaj-dalej" href="ogloszenie.php?id=<?php echo (int) $najnowszy['id']; ?>">Czytaj dalej</a>
           </div>
         </div>
 
         <div class="the-rest">
           <?php
-          // Kontynuujemy pętlę dla pozostałych rekordów (wynik "pamięta", że jeden już pobraliśmy)
+
+
           while ($o = mysqli_fetch_assoc($wynik)):
             $foto_karta = !empty($o['zdjecie']) ? "../uploads/ogloszenia/" . $o['zdjecie'] : "../img/prototyp-zdjecia.png";
             $opis_karty = oczysc_tresc_ogloszenia($o['krotki_opis']);
@@ -93,10 +94,10 @@
             }
             ?>
             <div class="info-card">
-              <img src="<?php echo $foto_karta; ?>" alt="<?php echo htmlspecialchars($o['tytul']); ?>">
+              <img src="<?php echo edusciezka_e($foto_karta); ?>" alt="<?php echo htmlspecialchars($o['tytul']); ?>">
               <h4><?php echo htmlspecialchars($o['tytul']); ?></h4>
               <p><?php echo htmlspecialchars($opis_karty); ?></p>
-              <a class="czytaj-dalej" href="ogloszenie.php?id=<?php echo $o['id']; ?>">Czytaj dalej</a>
+              <a class="czytaj-dalej" href="ogloszenie.php?id=<?php echo (int) $o['id']; ?>">Czytaj dalej</a>
             </div>
           <?php endwhile; ?>
         </div>

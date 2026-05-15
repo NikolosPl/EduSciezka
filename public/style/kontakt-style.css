@@ -1,5 +1,3 @@
-/* contact info */
-
 .contact-info {
   display: flex;
   align-items: flex-start;
@@ -26,8 +24,6 @@
   flex: 1 1 72%;
 }
 
-/* contact info phonebook */
-
 .contact-logo {
   display: block;
   width: min(140px, 55%);
@@ -45,11 +41,9 @@
   text-align: left;
 }
 
-.contact-info-left span {
+.contact-info-left p span {
   color: var(--span);
 }
-
-/* contact info form */
 
 .contact-info-right h2 {
   color: var(--primary);
@@ -152,8 +146,6 @@ input[type='submit']:hover {
   color: var(--primary);
   box-shadow: 0 0 5px var(--shadow);
 }
-
-/* footer */
 
 footer {
   display: flex;

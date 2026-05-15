@@ -1,171 +1,347 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&display=swap');
 
 :root {
-    --primary: #2A95FF;
-    --primary-hover: #1e82e6;
-    --primary-light: #f1f8ff;
-    --surface: #ffffff;
-    --bg: #f8faff;
-    --text: #2c3e50;
-    --text-muted: #7f8c8d;
-    --border: #d1e1f5;
-    --shadow: 0 4px 15px rgba(204, 204, 204, 0.3);
-    
-    /* Kolory statusów */
-    --status-planowany: #94a3b8;
-    --status-toku: #f59e0b;
-    --status-zakonczony: #10b981;
-    --status-porzucony: #ef4444;
-    --danger: #ef4444;
+  --primary: #2a95ff;
+  --primary-hover: #1e82e6;
+  --primary-light: #f1f8ff;
+  --surface: #ffffff;
+  --bg: #f8faff;
+  --text: #2c3e50;
+  --text-muted: #7f8c8d;
+  --border: #d1e1f5;
+  --shadow: 0 4px 15px rgba(204, 204, 204, 0.3);
+
+  --status-planowany: #94a3b8;
+  --status-toku: #f59e0b;
+  --status-zakonczony: #10b981;
+  --status-porzucony: #ef4444;
+  --danger: #ef4444;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: "Source Sans 3", sans-serif; }
-body { background-color: var(--bg); color: var(--text); }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Source Sans 3', sans-serif;
+}
+body {
+  background-color: var(--bg);
+  color: var(--text);
+}
 
-/* Nawigacja */
 .pasek {
-    background-color: var(--primary);
-    color: white;
-    padding: 0.9em 1.8em;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 12px var(--shadow-color);
+  background-color: var(--primary);
+  color: white;
+  padding: 0.9em 1.8em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 12px var(--shadow-color);
 }
 
 .pasek .logo {
-    font-size: 1.45rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .pasek a {
-    color: #fff;
-    text-decoration: none;
-    margin-left: 1em;
-    font-size: 0.82rem;
-    background: rgba(255,255,255,0.2);
-    padding: 6px 14px;
-    border-radius: 20px;
-    transition: 0.2s;
-    font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1em;
+  font-size: 0.82rem;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 14px;
+  border-radius: 20px;
+  transition: 0.2s;
+  font-weight: 600;
 }
 
-.pasek a:hover { background: rgba(255,255,255,0.35); }
-
+.pasek a:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
 
 .menu {
-    background-color: var(--primary-hover);
-    display: flex;
-    padding: 0 1.4em;
-    gap: 0.2em;
+  background-color: var(--primary-hover);
+  display: flex;
+  padding: 0 1.4em;
+  gap: 0.2em;
 }
 
 .menu a {
-    color: rgba(255,255,255,0.8);
-    text-decoration: none;
-    padding: 0.85em 1.2em;
-    font-size: 0.85rem;
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    transition: all 0.2s;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  padding: 0.85em 1.2em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
 }
 
-.menu a:hover, .menu a.aktywny {
-    color: #fff;
-    background: rgba(255,255,255,0.1);
+.menu a:hover,
+.menu a.aktywny {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.menu a.aktywny { border-bottom-color: #fff; }
+.menu a.aktywny {
+  border-bottom-color: #fff;
+}
 
 .tresc {
-    padding: 1.5em 1.8em;
-    max-width: 1000px; /* Nieco węższy dla lepszej czytelności logów */
-    margin: 0 auto;
+  padding: 1.5em 1.8em;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-/* Powiadomienia */
-.kom-sukces, .kom-blad { padding: 12px; border-radius: 8px; margin-bottom: 20px; font-weight: 600; }
-.kom-sukces { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-.kom-blad { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
-
-/* Nagłówek i przycisk dodawania */
-.naglowek-sekcji { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-.btn-pokaz { background: var(--primary); color: white; border: none; padding: 10px 25px; border-radius: 25px; font-weight: 700; cursor: pointer; transition: 0.2s; }
-
-/* --- POPRAWIONY FORMULARZ --- */
-.formularz-dodaj { 
-    display: none; /* Ukryty domyślnie */
-    background: #fff; 
-    border: 1px solid var(--border); 
-    border-radius: 15px; 
-    margin-bottom: 30px; 
-    box-shadow: var(--shadow);
-    overflow: hidden;
+.kom-sukces,
+.kom-blad {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.kom-sukces {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+.kom-blad {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
 }
 
-/* Klasa dodawana przez JS */
-.formularz-dodaj.widoczny { display: block; animation: fadeIn 0.3s ease; }
-
-.formularz-dodaj h3 { background: var(--primary-light); color: var(--primary); padding: 15px 25px; border-bottom: 1px solid var(--border); }
-.formularz-dodaj form { padding: 25px; }
-
-.rzad-pol { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-.pole { flex: 1; min-width: 200px; display: flex; flex-direction: column; }
-.pole label { font-size: 0.85rem; font-weight: 700; margin-bottom: 6px; }
-
-.pole input, .pole select, .pole textarea { 
-    padding: 12px; 
-    border: 1px solid #cbd5e1; 
-    border-radius: 8px; 
-    font-size: 0.9rem;
-    background: #fdfdfd;
+.naglowek-sekcji {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.btn-pokaz {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 25px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-/* Naprawa szerokości opisu (brak pustego boku) */
-.rzad-pol textarea { width: 100%; min-height: 80px; }
-
-.btn-dodaj { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-.btn-anuluj { background: #e2e8f0; color: #475569; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-left: 10px; }
-
-/* --- LISTA PROJEKTÓW --- */
-.projekty-lista { display: flex; flex-direction: column; gap: 15px; }
-.projekt-karta { 
-    background: #fff; 
-    border: 1px solid var(--border); 
-    border-radius: 12px; 
-    padding: 20px; 
-    border-left: 6px solid var(--status-planowany);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+.formularz-dodaj {
+  display: none;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
 }
 
-.projekt-karta.status-w_toku { border-left-color: var(--status-toku); }
-.projekt-karta.status-zakonczony { border-left-color: var(--status-zakonczony); }
-.projekt-karta.status-porzucony { border-left-color: var(--status-porzucony); }
+.formularz-dodaj.widoczny {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
 
-.projekt-gora { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.projekt-nazwa { font-size: 1.2rem; font-weight: 800; }
+.formularz-dodaj h3 {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 15px 25px;
+  border-bottom: 1px solid var(--border);
+}
+.formularz-dodaj form {
+  padding: 25px;
+}
 
-.status-badge { font-size: 0.7rem; padding: 4px 10px; border-radius: 4px; font-weight: 800; text-transform: uppercase; margin-left: 10px; }
-.sb-w_toku { background: #fef3c7; color: #92400e; }
-.sb-zakonczony { background: #dcfce7; color: #166534; }
-.sb-porzucony { background: #fee2e2; color: #991b1b; }
+.rzad-pol {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.pole {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+}
+.pole label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
 
-.priorytet { font-size: 0.7rem; padding: 4px 10px; border-radius: 4px; font-weight: 800; }
-.priorytet-niski { background: #e1ffe8; color: #166534; }
-.priorytet-sredni { background: #fef3c7; color: #92400e; }
-.priorytet-wysoki { background: #ffedd5; color: #ea580c; }
-.priorytet-krytyczny { background: #fee2e2; color: #991b1b; }
+.pole input,
+.pole select,
+.pole textarea {
+  padding: 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: #fdfdfd;
+}
 
-.projekt-opis { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; }
-.projekt-meta { font-size: 0.85rem; color: #94a3b8; padding-top: 10px; border-top: 1px solid #f1f5f9; margin-bottom: 15px; }
-.kropka { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+.rzad-pol textarea {
+  width: 100%;
+  min-height: 80px;
+}
 
-.projekt-akcje a { text-decoration: none; font-size: 0.75rem; font-weight: 700; padding: 6px 12px; border-radius: 6px; margin-right: 5px; display: inline-block; }
-.a-w-toku { background: #fffbeb; color: #92400e; border: 1px solid #fef3c7; }
-.a-zakonczony { background: #f0fdf4; color: #166534; border: 1px solid #dcfce7; }
-.a-porzucony { background: #fef2f2; color: #991b1b; border: 1px solid #fee2e2; }
+.btn-dodaj {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn-anuluj {
+  background: #e2e8f0;
+  color: #475569;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 10px;
+}
 
-.req { color: var(--danger); }
+.projekty-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.projekt-karta {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  border-left: 6px solid var(--status-planowany);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.projekt-karta.status-w_toku {
+  border-left-color: var(--status-toku);
+}
+.projekt-karta.status-zakonczony {
+  border-left-color: var(--status-zakonczony);
+}
+.projekt-karta.status-porzucony {
+  border-left-color: var(--status-porzucony);
+}
+
+.projekt-gora {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.projekt-nazwa {
+  font-size: 1.2rem;
+  font-weight: 800;
+}
+
+.status-badge {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-left: 10px;
+}
+.sb-w_toku {
+  background: #fef3c7;
+  color: #92400e;
+}
+.sb-zakonczony {
+  background: #dcfce7;
+  color: #166534;
+}
+.sb-porzucony {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.priorytet {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 800;
+}
+.priorytet-niski {
+  background: #e1ffe8;
+  color: #166534;
+}
+.priorytet-sredni {
+  background: #fef3c7;
+  color: #92400e;
+}
+.priorytet-wysoki {
+  background: #ffedd5;
+  color: #ea580c;
+}
+.priorytet-krytyczny {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.projekt-opis {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 15px;
+}
+.projekt-meta {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+  margin-bottom: 15px;
+}
+.kropka {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.projekt-akcje a {
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 6px;
+  margin-right: 5px;
+  display: inline-block;
+}
+.a-w-toku {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fef3c7;
+}
+.a-zakonczony {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #dcfce7;
+}
+.a-porzucony {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fee2e2;
+}
+
+.req {
+  color: var(--danger);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

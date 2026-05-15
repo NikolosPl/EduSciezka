@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/security.php';
+
 $polaczenie = mysqli_connect("localhost", "nikolospl_edusciezka", "dmjf2eeo0opayrar", "nikolospl_edusciezka");
 
 if (!$polaczenie) {
@@ -261,6 +263,4 @@ function edusciezka_apply_schema_sync($polaczenie, $schema_file)
 }
 
 edusciezka_apply_schema_sync($polaczenie, dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'baza.sql');
-
-session_start();
 ?>

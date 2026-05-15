@@ -31,7 +31,7 @@ body {
 }
 
 body::before {
-  content: "";
+  content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
@@ -42,7 +42,6 @@ body::before {
   z-index: 0;
 }
 
-/* auth page */
 .auth-page {
   position: relative;
   z-index: 1;
@@ -241,7 +240,6 @@ body::before {
   height: 20px;
 }
 
-/* footer */
 .footer {
   position: fixed;
   bottom: 0;
@@ -285,7 +283,9 @@ body::before {
   color: var(--primary);
   display: inline-flex;
   align-items: center;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
 }
 
 .footer-right a:hover {
@@ -298,7 +298,6 @@ body::before {
   height: 24px;
 }
 
-/* responsive */
 @media (max-width: 540px) {
   .auth-page {
     padding: 100px 16px 120px;

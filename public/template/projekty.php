@@ -10,8 +10,8 @@ $uid = (int) $_SESSION['uzytkownik_id'];
 $imie = $_SESSION['imie'];
 $komunikat = "";
 
-// Dodaj projekt
 if (isset($_POST['dodaj_projekt'])) {
+    edusciezka_require_csrf();
     $nazwa = mysqli_real_escape_string($polaczenie, $_POST['nazwa']);
     $opis = mysqli_real_escape_string($polaczenie, $_POST['opis']);
     $deadline = mysqli_real_escape_string($polaczenie, $_POST['deadline']);
@@ -30,8 +30,8 @@ if (isset($_POST['dodaj_projekt'])) {
     }
 }
 
-// Zmien status projektu
 if (isset($_GET['status']) && isset($_GET['id']) && is_numeric($_GET['id'])) {
+    edusciezka_require_csrf();
     $pid = (int) $_GET['id'];
     $nowy_status = mysqli_real_escape_string($polaczenie, $_GET['status']);
     $dozwolone = array('planowany', 'w_toku', 'zakończony', 'porzucony');
@@ -77,7 +77,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
         <a href="dashboard.php">Dashboard</a>
         <a href="logi.php">Log Sukcesu</a>
         <a href="projekty.php" class="aktywny">Projekty</a>
-        <a href="planer-przyszlosci.php">Planer przyszłości</a>
+        <a href="planer-przyszlosci.php">Planer Przyszłości</a>
     </div>
 
     <div class="tresc">
@@ -102,6 +102,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
         <div class="formularz-dodaj" id="form-projekt">
             <h3>Nowy projekt</h3>
             <form method="POST">
+                <?php echo edusciezka_csrf_input(); ?>
                 <div class="rzad-pol">
                     <div class="pole">
                         <label>Nazwa projektu <span class="req">*</span></label>
@@ -156,14 +157,15 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
                     $s = $proj['status'];
                     $s_css = str_replace(array('ó', 'ń', 'ą', 'ę', 'ś', 'ż', 'ź', 'ć', 'ł'), array('o', 'n', 'a', 'e', 's', 'z', 'z', 'c', 'l'), $s);
                     ?>
-                    <div class="projekt-karta status-<?php echo $s_css; ?>">
+                    <div class="projekt-karta status-<?php echo edusciezka_e($s_css); ?>">
                         <div class="projekt-gora">
                             <div>
                                 <span class="projekt-nazwa"><?php echo htmlspecialchars($proj['nazwa']); ?></span>
-                                <span class="status-badge sb-<?php echo $s_css; ?>"><?php echo $s; ?></span>
+                                <span
+                                    class="status-badge sb-<?php echo edusciezka_e($s_css); ?>"><?php echo htmlspecialchars($s); ?></span>
                             </div>
                             <span
-                                class="priorytet priorytet-<?php echo $proj['priorytet']; ?>"><?php echo ucfirst($proj['priorytet']); ?></span>
+                                class="priorytet priorytet-<?php echo edusciezka_e($proj['priorytet']); ?>"><?php echo htmlspecialchars(ucfirst($proj['priorytet'])); ?></span>
                         </div>
 
                         <?php if ($proj['opis']): ?>
@@ -172,7 +174,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
 
                         <div class="projekt-meta">
                             <?php if ($proj['kat_nazwa']): ?>
-                                <span class="kropka" style="background:<?php echo $proj['kolor_hex']; ?>"></span>
+                                <span class="kropka" style="background:<?php echo edusciezka_e($proj['kolor_hex']); ?>"></span>
                                 <?php echo htmlspecialchars($proj['kat_nazwa']); ?> &nbsp;|&nbsp;
                             <?php endif; ?>
                             Deadline: <strong><?php echo date('d.m.Y', strtotime($proj['deadline'])); ?></strong>
@@ -190,15 +192,16 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
                         <div class="projekt-akcje">
                             <span style="font-size:12px;color:#6b7280">Zmień status: </span>
                             <?php if ($s != 'w_toku'): ?>
-                                <a href="projekty.php?id=<?php echo $proj['id']; ?>&status=w_toku" class="a-w-toku">W toku</a>
+                                <a href="<?php echo edusciezka_e(edusciezka_csrf_url('projekty.php?id=' . (int) $proj['id'] . '&status=w_toku')); ?>"
+                                    class="a-w-toku">W toku</a>
                             <?php endif; ?>
                             <?php if ($s != 'zakończony'): ?>
-                                <a href="projekty.php?id=<?php echo $proj['id']; ?>&status=zakończony" class="a-zakonczony"
-                                    onclick="return confirm('Oznaczyc jako zakonczone?')">Zakończ</a>
+                                <a href="<?php echo edusciezka_e(edusciezka_csrf_url('projekty.php?id=' . (int) $proj['id'] . '&status=zakończony')); ?>"
+                                    class="a-zakonczony" onclick="return confirm('Oznaczyc jako zakonczone?')">Zakończ</a>
                             <?php endif; ?>
                             <?php if ($s != 'porzucony'): ?>
-                                <a href="projekty.php?id=<?php echo $proj['id']; ?>&status=porzucony" class="a-porzucony"
-                                    onclick="return confirm('Oznaczyc jako porzucone?')">Porzuć</a>
+                                <a href="<?php echo edusciezka_e(edusciezka_csrf_url('projekty.php?id=' . (int) $proj['id'] . '&status=porzucony')); ?>"
+                                    class="a-porzucony" onclick="return confirm('Oznaczyc jako porzucone?')">Porzuć</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -208,16 +211,7 @@ $wynik_kategorii = mysqli_query($polaczenie, "SELECT * FROM kategorie ORDER BY n
 
     </div>
 
-    <script>
-        function przelaczForm(id) {
-            var el = document.getElementById(id);
-            if (el.className.indexOf('widoczny') === -1) {
-                el.className = 'formularz-dodaj widoczny';
-            } else {
-                el.className = 'formularz-dodaj';
-            }
-        }
-    </script>
+    <script src="../js/site-scripts.js"></script>
 
 </body>
 

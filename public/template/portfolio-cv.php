@@ -38,166 +38,7 @@ $drukuj = isset($_GET['print']) && $_GET['print'] === '1';
     <meta charset="UTF-8">
     <title>EduSciezka - Portfolio i CV</title>
     <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            color: #111827;
-            background: #f3f4f6;
-            line-height: 1.4;
-        }
-
-        .page {
-            max-width: 900px;
-            margin: 24px auto;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .top {
-            background: linear-gradient(120deg, #1d4ed8, #2563eb);
-            color: #fff;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .top h1 {
-            margin: 0;
-            font-size: 28px;
-        }
-
-        .top small {
-            display: block;
-            opacity: 0.9;
-            margin-top: 4px;
-            font-size: 13px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-block;
-            text-decoration: none;
-            background: #fff;
-            color: #1d4ed8;
-            border-radius: 6px;
-            padding: 8px 12px;
-            font-size: 13px;
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-
-        .content {
-            padding: 18px;
-        }
-
-        .section {
-            margin-bottom: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .section h2 {
-            margin: 0;
-            font-size: 14px;
-            padding: 10px 12px;
-            background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-            color: #374151;
-        }
-
-        .section-body {
-            padding: 12px;
-        }
-
-        .meta {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 10px;
-            font-size: 13px;
-        }
-
-        .meta div {
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 8px 10px;
-            background: #fff;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-
-        th,
-        td {
-            border-bottom: 1px solid #f3f4f6;
-            padding: 8px;
-            text-align: left;
-            vertical-align: top;
-        }
-
-        th {
-            color: #6b7280;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            background: #fcfcfd;
-        }
-
-        .skill-list {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .skill {
-            border: 1px solid #dbeafe;
-            background: #eff6ff;
-            color: #1e3a8a;
-            border-radius: 999px;
-            padding: 4px 10px;
-            font-size: 12px;
-        }
-
-        .muted {
-            color: #6b7280;
-            font-size: 12px;
-        }
-
-        @media print {
-            body {
-                background: #fff;
-            }
-
-            .page {
-                margin: 0;
-                max-width: 100%;
-                border: none;
-                border-radius: 0;
-            }
-
-            .actions {
-                display: none;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="../style/portfolio-cv-style.css">
 </head>
 
 <body>
@@ -209,7 +50,7 @@ $drukuj = isset($_GET['print']) && $_GET['print'] === '1';
                 <small><?php echo htmlspecialchars($user['email']); ?></small>
             </div>
             <div class="actions">
-                <a class="btn" href="planer-przyszlosci.php">Wroc do planera</a>
+                <a class="btn" href="planer-przyszlosci.php">Wróć do Planera Przyszłości</a>
                 <a class="btn" href="portfolio-cv.php?print=1">Drukuj / PDF</a>
             </div>
         </div>
@@ -337,13 +178,7 @@ $drukuj = isset($_GET['print']) && $_GET['print'] === '1';
         </div>
     </div>
 
-    <?php if ($drukuj): ?>
-        <script>
-            window.addEventListener('load', function () {
-                window.print();
-            });
-        </script>
-    <?php endif; ?>
+    <script src="../js/portfolio-cv.js"></script>
 </body>
 
 </html>

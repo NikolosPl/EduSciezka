@@ -40,7 +40,7 @@ $liczba_logow = mysqli_num_rows($wynik);
         <a href="dashboard.php">Dashboard</a>
         <a href="logi.php" class="aktywny">Log Sukcesu</a>
         <a href="projekty.php">Projekty</a>
-        <a href="planer-przyszlosci.php">Planer przyszłości</a>
+        <a href="planer-przyszlosci.php">Planer Przyszłości</a>
     </div>
 
     <div class="tresc">
@@ -77,7 +77,7 @@ $liczba_logow = mysqli_num_rows($wynik);
                                     <br><small style="color:#9ca3af"><?php echo htmlspecialchars($log['opis']); ?></small>
                                 <?php endif; ?>
                             </td>
-                            <td><span class="typ-badge"><?php echo $log['typ']; ?></span></td>
+                            <td><span class="typ-badge"><?php echo edusciezka_e($log['typ']); ?></span></td>
                             <td class="xp">+<?php echo $log['punkty_xp']; ?> XP</td>
                             <td style="font-size:12px;color:#6b7280">
                                 <?php echo date('d.m.Y H:i', strtotime($log['data_osiagniecia'])); ?>
