@@ -31,12 +31,12 @@
 .contact-logo {
   display: block;
   width: min(140px, 55%);
-  margin: 0 0 0.8em;
+  margin: 0.8rem auto;
 }
 
 .contact-info-left h2 {
   color: var(--primary);
-  text-align: left;
+  text-align: center;
 }
 
 .contact-info-left p {
