@@ -185,7 +185,7 @@ $stat_logi = $r[0];
         <a href="dashboard.php" class="aktywny">Dashboard</a>
         <a href="logi.php">Log Sukcesu</a>
         <a href="projekty.php">Projekty</a>
-        <a href="planer-przyszlosci.php">Planer przyszłości</a>
+        <a href="planer-przyszlosci.php">Planer Przyszłości</a>
     </div>
 
     <div class="tresc">
