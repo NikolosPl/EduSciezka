@@ -182,7 +182,7 @@ if (isset($_POST['dodaj_ogloszenie'])) {
 
 <head>
     <meta charset="UTF-8">
-    <title>EduSciezka - Panel Admina</title>
+    <title>EduŚcieżka - Panel Admina</title>
     <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/admin-style.css">
 </head>
@@ -190,13 +190,13 @@ if (isset($_POST['dodaj_ogloszenie'])) {
 <body>
 
     <div class="pasek">
-        <div class="logo">EduSciezka <span class="badge-admin">ADMIN</span></div>
-        <div><a href="admin_login.php?wyloguj=1">Wyloguj sie</a></div>
+        <div class="logo">EduŚcieżka <span class="badge-admin">ADMIN</span></div>
+        <div><a href="admin_login.php?wyloguj=1">Wyloguj się</a></div>
     </div>
 
     <div class="menu">
-        <a href="admin.php">Przeglad</a>
-        <a href="admin.php#uzytkownicy">Uzytkownicy</a>
+        <a href="admin.php">Przegląd</a>
+        <a href="admin.php#uzytkownicy">Użytkownicy</a>
         <a href="admin.php#zadania">Zadania</a>
         <a href="admin.php#logi">Logi sukcesu</a>
     </div>
@@ -218,19 +218,19 @@ if (isset($_POST['dodaj_ogloszenie'])) {
         <div class="statystyki">
             <div class="karta-stat">
                 <div class="liczba"><?php echo $stat_uzyt; ?></div>
-                <div class="etykieta">Uzytkownikow</div>
+                <div class="etykieta">Użytkowników</div>
             </div>
             <div class="karta-stat n2">
                 <div class="liczba"><?php echo $stat_zad; ?></div>
-                <div class="etykieta">Zadan lacznie</div>
+                <div class="etykieta">Zadań łącznie</div>
             </div>
             <div class="karta-stat n3">
                 <div class="liczba"><?php echo $stat_done; ?></div>
-                <div class="etykieta">Ukonczonych</div>
+                <div class="etykieta">Ukończonych</div>
             </div>
             <div class="karta-stat n4">
                 <div class="liczba"><?php echo $stat_logi; ?></div>
-                <div class="etykieta">Logow sukcesu</div>
+                <div class="etykieta">Logów sukcesu</div>
             </div>
         </div>
 
@@ -288,16 +288,16 @@ if (isset($_POST['dodaj_ogloszenie'])) {
             <!-- UZYTKOWNICY -->
             <div class="sekcja" id="uzytkownicy">
                 <div class="sekcja-naglowek">
-                    <h2>Uzytkownicy systemu</h2>
+                    <h2>Użytkownicy systemu</h2>
                 </div>
                 <?php if (mysqli_num_rows($wynik_uzyt) == 0): ?>
-                    <div class="pusta">Brak uzytkownikow.</div>
+                    <div class="pusta">Brak użytkownikow.</div>
                 <?php else: ?>
                     <table>
                         <tr>
-                            <th>Imie i nazwisko</th>
+                            <th>Imię i nazwisko</th>
                             <th>Email</th>
-                            <th>Liczba zadan</th>
+                            <th>Liczba zadań</th>
                             <th>Data rejestracji</th>
                             <th>Ostatnie logowanie</th>
                             <th>Akcje</th>
@@ -326,15 +326,15 @@ if (isset($_POST['dodaj_ogloszenie'])) {
             <!-- ZADANIA -->
             <div class="sekcja" id="zadania">
                 <div class="sekcja-naglowek">
-                    <h2>Zadania wszystkich uzytkownikow (ostatnie 30)</h2>
+                    <h2>Zadania wszystkich użytkowników (ostatnie 30)</h2>
                 </div>
                 <?php if (mysqli_num_rows($wynik_zadania) == 0): ?>
-                    <div class="pusta">Brak zadan.</div>
+                    <div class="pusta">Brak zadań.</div>
                 <?php else: ?>
                     <table>
                         <tr>
                             <th>Zadanie</th>
-                            <th>Uzytkownik</th>
+                            <th>Użytkownik</th>
                             <th>Kategoria</th>
                             <th>Priorytet</th>
                             <th>Status</th>
@@ -378,12 +378,12 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                     <h2>Logi sukcesu (ostatnie 20)</h2>
                 </div>
                 <?php if (mysqli_num_rows($wynik_logi) == 0): ?>
-                    <div class="pusta">Brak logow sukcesu.</div>
+                    <div class="pusta">Brak logów sukcesu.</div>
                 <?php else: ?>
                     <table>
                         <tr>
-                            <th>Tytul</th>
-                            <th>Uzytkownik</th>
+                            <th>Tytuł</th>
+                            <th>Użytkownik</th>
                             <th>Typ</th>
                             <th>Punkty XP</th>
                             <th>Data</th>
