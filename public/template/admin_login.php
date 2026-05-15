@@ -1,49 +1,6 @@
 <?php
 require_once "polaczenie.php";
 
-function zaladuj_env($sciezka)
-{
-    if (!is_file($sciezka) || !is_readable($sciezka)) {
-        return;
-    }
-
-    $linie = file($sciezka, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    if (!$linie) {
-        return;
-    }
-
-    foreach ($linie as $linia) {
-        $linia = trim($linia);
-        if ($linia === '' || strpos($linia, '#') === 0) {
-            continue;
-        }
-
-        $pozycja = strpos($linia, '=');
-        if ($pozycja === false) {
-            continue;
-        }
-
-        $klucz = trim(substr($linia, 0, $pozycja));
-        $wartosc = trim(substr($linia, $pozycja + 1));
-
-        if ($klucz === '') {
-            continue;
-        }
-
-        $obecna = getenv($klucz);
-        if ($obecna !== false && $obecna !== '') {
-            continue;
-        }
-
-        $wartosc = trim($wartosc, "\"'");
-        putenv($klucz . '=' . $wartosc);
-        $_ENV[$klucz] = $wartosc;
-        $_SERVER[$klucz] = $wartosc;
-    }
-}
-
-zaladuj_env(__DIR__ . '/../../.env');
-
 if (isset($_GET['wyloguj'])) {
     unset($_SESSION['admin']);
     header("Location: admin_login.php");
@@ -65,7 +22,7 @@ if (isset($_POST['zaloguj'])) {
         $blad = 'Za duzo prob logowania administratora. Sprobuj ponownie pozniej.';
     }
 
-    $admin_haslo = getenv('EDUSCIEZKA_ADMIN_PASSWORD') ?: '';
+    $admin_haslo = edusciezka_env('EDUSCIEZKA_ADMIN_PASSWORD', '');
     if ($blad === '' && $_POST['haslo'] === $admin_haslo) {
         session_regenerate_id(true);
         $_SESSION['admin'] = true;

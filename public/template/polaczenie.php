@@ -2,7 +2,16 @@
 
 require_once __DIR__ . '/security.php';
 
-$polaczenie = mysqli_connect("localhost", "nikolospl_edusciezka", "dmjf2eeo0opayrar", "nikolospl_edusciezka");
+$db_host = edusciezka_env('EDUSCIEZKA_DB_HOST');
+$db_user = edusciezka_env('EDUSCIEZKA_DB_USER');
+$db_pass = edusciezka_env('EDUSCIEZKA_DB_PASS');
+$db_name = edusciezka_env('EDUSCIEZKA_DB_NAME');
+
+if ($db_host === null || $db_user === null || $db_pass === null || $db_name === null) {
+    die('Brak konfiguracji bazy danych w pliku .env.');
+}
+
+$polaczenie = mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
 if (!$polaczenie) {
     die("Blad polaczenia: " . mysqli_connect_error());

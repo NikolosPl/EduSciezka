@@ -1,5 +1,45 @@
 <?php
 
+function edusciezka_load_env_file($path)
+{
+    if (!is_file($path) || !is_readable($path)) {
+        return;
+    }
+
+    $variables = parse_ini_file($path, false, INI_SCANNER_RAW);
+    if ($variables === false) {
+        return;
+    }
+
+    foreach ($variables as $key => $value) {
+        if (getenv($key) === false || getenv($key) === '') {
+            putenv($key . '=' . $value);
+        }
+        $_ENV[$key] = $value;
+        $_SERVER[$key] = $value;
+    }
+}
+
+function edusciezka_env($key, $default = null)
+{
+    $value = getenv($key);
+    if ($value !== false && $value !== '') {
+        return $value;
+    }
+
+    if (isset($_ENV[$key]) && $_ENV[$key] !== '') {
+        return $_ENV[$key];
+    }
+
+    if (isset($_SERVER[$key]) && $_SERVER[$key] !== '') {
+        return $_SERVER[$key];
+    }
+
+    return $default;
+}
+
+edusciezka_load_env_file(dirname(__DIR__, 2) . '/.env');
+
 if (session_status() === PHP_SESSION_NONE) {
     $secure = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
     session_set_cookie_params(array(

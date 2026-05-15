@@ -155,7 +155,6 @@ if (isset($_POST['dodaj_ogloszenie'])) {
                 $blad_pliku = true;
             }
         }
-        // $finfo was unset after use or not available; nothing to close when using OO finfo or mime_content_type
     }
 
     

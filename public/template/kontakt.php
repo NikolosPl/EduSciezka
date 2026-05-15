@@ -8,49 +8,6 @@ $imie_nazwisko = "";
 $email = "";
 $tresc = "";
 
-function zaladuj_env($sciezka)
-{
-    if (!is_file($sciezka) || !is_readable($sciezka)) {
-        return;
-    }
-
-    $linie = file($sciezka, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    if (!$linie) {
-        return;
-    }
-
-    foreach ($linie as $linia) {
-        $linia = trim($linia);
-        if ($linia === '' || strpos($linia, '#') === 0) {
-            continue;
-        }
-
-        $pozycja = strpos($linia, '=');
-        if ($pozycja === false) {
-            continue;
-        }
-
-        $klucz = trim(substr($linia, 0, $pozycja));
-        $wartosc = trim(substr($linia, $pozycja + 1));
-
-        if ($klucz === '') {
-            continue;
-        }
-
-        $obecna = getenv($klucz);
-        if ($obecna !== false && $obecna !== '') {
-            continue;
-        }
-
-        $wartosc = trim($wartosc, "\"'");
-        putenv($klucz . '=' . $wartosc);
-        $_ENV[$klucz] = $wartosc;
-        $_SERVER[$klucz] = $wartosc;
-    }
-}
-
-zaladuj_env(__DIR__ . '/../../.env');
-
 function koduj_temat_utf8($temat)
 {
     return '=?UTF-8?B?' . base64_encode((string) $temat) . '?=';
@@ -78,12 +35,16 @@ function smtp_wyslij_komende($socket, $komenda, $oczekiwane_kody)
 
 function wyslij_mail_smtp_yahoo($replyToEmail, $replyToName, $subject, $body)
 {
-    $smtpHost = getenv('EDUSCIEZKA_SMTP_HOST') ?: 'smtp.mail.yahoo.com';
-    $smtpPort = (int) (getenv('EDUSCIEZKA_SMTP_PORT') ?: 587);
-    $smtpUser = getenv('EDUSCIEZKA_SMTP_USER') ?: 'edusciezka@yahoo.com';
-    $smtpPass = getenv('EDUSCIEZKA_SMTP_PASS') ?: '';
-    $mailTo = getenv('EDUSCIEZKA_CONTACT_TO') ?: 'edusciezka@yahoo.com';
+    $smtpHost = edusciezka_env('EDUSCIEZKA_SMTP_HOST');
+    $smtpPort = (int) edusciezka_env('EDUSCIEZKA_SMTP_PORT', '587');
+    $smtpUser = edusciezka_env('EDUSCIEZKA_SMTP_USER');
+    $smtpPass = edusciezka_env('EDUSCIEZKA_SMTP_PASS');
+    $mailTo = edusciezka_env('EDUSCIEZKA_CONTACT_TO');
     $fromName = 'EduSciezka';
+
+    if ($smtpHost === null || $smtpUser === null || $smtpPass === null || $mailTo === null) {
+        return false;
+    }
 
     if ($smtpPass === '') {
         return false;
@@ -185,8 +146,12 @@ function wyslij_mail_smtp_yahoo($replyToEmail, $replyToName, $subject, $body)
 
 function wyslij_mail_fallback($replyToEmail, $subject, $body)
 {
-    $odbiorca = getenv('EDUSCIEZKA_CONTACT_TO') ?: 'edusciezka@yahoo.com';
-    $from = getenv('EDUSCIEZKA_MAIL_FROM') ?: 'no-reply@edusciezka.local';
+    $odbiorca = edusciezka_env('EDUSCIEZKA_CONTACT_TO');
+    $from = edusciezka_env('EDUSCIEZKA_MAIL_FROM');
+
+    if ($odbiorca === null || $from === null) {
+        return false;
+    }
 
     $naglowki = array(
         'MIME-Version: 1.0',
