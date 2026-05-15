@@ -292,6 +292,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="line"></div>
                 <p>Numer telefonu: <span>+48 000 000 000</span></p>
                 <p>Adres e-mail: <span>edusciezka@yahoo.com</span></p>
+                <p>Wysyłając wiadomość wyrażasz zgodę na przetwarzanie danych osobowych przez administratora strony zawartych w formularzu w celu udzielenia odpowiedzi.</p>
             </div>
             <div class="contact-info-right">
                 <h2>Napisz do nas</h2>
