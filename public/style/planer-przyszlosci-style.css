@@ -127,6 +127,78 @@ body {
   margin: 0 auto;
 }
 
+.planer-uklad {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.planer-nav {
+  position: sticky;
+  top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 24px var(--shadow-color);
+}
+
+.planer-nav-head {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 10px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.planer-nav-head span {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.planer-nav-head strong {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.planer-nav a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: linear-gradient(180deg, #ffffff, #f7fbff);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.planer-nav a:hover {
+  border-color: var(--border);
+  color: var(--primary);
+  transform: translateX(3px);
+}
+
+.planer-tresc {
+  min-width: 0;
+}
+
+.sekcja {
+  scroll-margin-top: 90px;
+}
+
+.sekcja[id] {
+  scroll-margin-top: 90px;
+}
+
 .statystyki {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -369,15 +441,20 @@ td {
 
 .status,
 .etap-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.7rem;
   font-weight: 800;
   padding: 4px 10px;
   border-radius: 4px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 .status-w_toku {
-  background: #fef3c7;
-  color: #92400e;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
 }
 .status-zakonczone {
   background: #dcfce7;
@@ -617,4 +694,30 @@ td {
 .kom-blad {
   background: #fee2e2;
   color: #991b1b;
+}
+
+@media (max-width: 1100px) {
+  .planer-uklad {
+    grid-template-columns: 1fr;
+  }
+
+  .planer-nav {
+    position: relative;
+    top: auto;
+  }
+}
+
+@media (max-width: 700px) {
+  .tresc {
+    padding: 1rem;
+  }
+
+  .planer-nav {
+    gap: 8px;
+    padding: 14px;
+  }
+
+  .planer-nav a {
+    padding: 9px 10px;
+  }
 }

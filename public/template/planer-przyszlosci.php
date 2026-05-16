@@ -523,6 +523,8 @@ $etykiety_etapow = array(
 <head>
     <meta charset="UTF-8">
     <title>EduŚcieżka - Planer Przyszłości</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="shortcut icon" href="../img/logo.png" type="image/x-icon">
     <link rel="stylesheet" href="../style/planer-przyszlosci-style.css">
 </head>
@@ -581,337 +583,384 @@ $etykiety_etapow = array(
             </div>
         </div>
 
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2>Autoplan: generowanie realnego harmonogramu</h2>
-            </div>
-            <div class="formularz-dodaj">
-                <form method="POST">
-                    <?php echo edusciezka_csrf_input(); ?>
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Główny cel *</label>
-                            <input type="text" name="auto_cel"
-                                placeholder="np. Wejście do branży IT do końca przyszłego roku" required>
-                        </div>
-                        <div class="pole">
-                            <label>Ścieżka *</label>
-                            <select name="auto_sciezka" required>
-                                <option value="studia">Studia -> praca</option>
-                                <option value="praca">Praca od razu</option>
-                                <option value="gap">Gap year + rozwój</option>
-                                <option value="mieszana" selected>Mieszana (nauka + praca)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Start planu *</label>
-                            <input type="date" name="auto_start" required>
-                        </div>
-                        <div class="pole">
-                            <label>Tempo</label>
-                            <select name="auto_tempo">
-                                <option value="standard" selected>Standardowe</option>
-                                <option value="intensywne">Intensywne</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="rzad-pol">
-                        <label class="checkbox-line"><input type="checkbox" name="auto_certyfikat" value="1" checked>
-                            Dodaj etap certyfikatu strategicznego</label>
-                    </div>
-                    <button type="submit" name="generuj_autoplan" class="btn-dodaj">Generuj autoplan</button>
-                </form>
-            </div>
-        </div>
+        <div class="planer-uklad">
+            <aside class="planer-nav" aria-label="Nawigacja po planie przyszłości">
+                <div class="planer-nav-head">
+                    <span>Skróty</span>
+                    <strong>Planer przyszłości</strong>
+                </div>
+                <a href="#autoplan">Autoplan</a>
+                <a href="#ryzyko">Wczesne ostrzeganie</a>
+                <a href="#misje">Co robić dziś</a>
+                <a href="#symulator">Symulator ścieżek</a>
+                <a href="#portfolio-cv">Portfolio i CV</a>
+                <a href="#edytuj-etap">Dodaj / edytuj etap</a>
+                <a href="#plan">Twój plan</a>
+                <a href="#kalendarz">Kalendarz</a>
+            </aside>
 
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2>Wczesne ostrzeganie ryzyka</h2>
-            </div>
-            <div class="risk-wrap">
-                <?php foreach ($alarmy_ryzyka as $alarm): ?>
-                    <div class="risk-item risk-<?php echo edusciezka_e($alarm['typ']); ?>">
-                        <strong><?php echo htmlspecialchars($alarm['tytul']); ?></strong>
-                        <div><?php echo htmlspecialchars($alarm['akcja']); ?></div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
+            <div class="planer-tresc">
 
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2>Co robić dziś: 3 najważniejsze kroki</h2>
-            </div>
-            <div class="mission-wrap">
-                <?php if (count($misje_dnia) === 0): ?>
-                    <div class="pusta-tabela">Brak pilnych kroków na dziś. Możesz zaplanować nowe etapy.</div>
-                <?php else: ?>
-                    <?php foreach ($misje_dnia as $misja): ?>
-                        <div class="mission-item">
-                            <div>
-                                <span class="mission-source"><?php echo htmlspecialchars($misja['zrodlo']); ?></span>
-                                <strong><?php echo htmlspecialchars($misja['tytul']); ?></strong>
-                                <div class="mission-meta"><?php echo htmlspecialchars($misja['powod']); ?> | termin:
-                                    <?php echo htmlspecialchars(date('d.m.Y', strtotime($misja['termin']))); ?>
+                <div class="sekcja" id="autoplan">
+                    <div class="sekcja-naglowek">
+                        <h2>Autoplan: generowanie realnego harmonogramu</h2>
+                    </div>
+                    <div class="formularz-dodaj">
+                        <form method="POST">
+                            <?php echo edusciezka_csrf_input(); ?>
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Główny cel *</label>
+                                    <input type="text" name="auto_cel"
+                                        placeholder="np. Wejście do branży IT do końca przyszłego roku" required>
+                                </div>
+                                <div class="pole">
+                                    <label>Ścieżka *</label>
+                                    <select name="auto_sciezka" required>
+                                        <option value="studia">Studia -> praca</option>
+                                        <option value="praca">Praca od razu</option>
+                                        <option value="gap">Gap year + rozwój</option>
+                                        <option value="mieszana" selected>Mieszana (nauka + praca)</option>
+                                    </select>
                                 </div>
                             </div>
-                            <a href="<?php echo htmlspecialchars($misja['link']); ?>" class="btn-mission">Otwórz</a>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </div>
-        </div>
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Start planu *</label>
+                                    <input type="date" name="auto_start" required>
+                                </div>
+                                <div class="pole">
+                                    <label>Tempo</label>
+                                    <select name="auto_tempo">
+                                        <option value="standard" selected>Standardowe</option>
+                                        <option value="intensywne">Intensywne</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="rzad-pol">
+                                <label class="checkbox-line"><input type="checkbox" name="auto_certyfikat" value="1"
+                                        checked>
+                                    Dodaj etap certyfikatu strategicznego</label>
+                            </div>
+                            <button type="submit" name="generuj_autoplan" class="btn-dodaj">Generuj autoplan</button>
+                        </form>
+                    </div>
+                </div>
 
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2>Symulator ścieżek życia</h2>
-            </div>
-            <div class="formularz-dodaj">
-                <form method="POST">
-                    <?php echo edusciezka_csrf_input(); ?>
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Horyzont (lata)</label>
-                            <input type="number" name="sim_horyzont_lat" min="2" max="10" value="5">
-                        </div>
-                        <div class="pole">
-                            <label>Lata studiów</label>
-                            <input type="number" name="sim_lata_studiow" min="1" max="6" value="3">
-                        </div>
-                        <div class="pole">
-                            <label>Koszt studiów / miesiąc (PLN)</label>
-                            <input type="number" name="sim_koszt_studia_msc" min="0" step="50" value="1200">
-                        </div>
+                <div class="sekcja" id="ryzyko">
+                    <div class="sekcja-naglowek">
+                        <h2>Wczesne ostrzeganie ryzyka</h2>
                     </div>
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Kursy / rok (PLN)</label>
-                            <input type="number" name="sim_kursy_rocznie" min="0" step="100" value="3000">
-                        </div>
-                        <div class="pole">
-                            <label>Start pensji po studiach (PLN)</label>
-                            <input type="number" name="sim_pensja_studia" min="0" step="100" value="6500">
-                        </div>
-                        <div class="pole">
-                            <label>Start pensji praca od razu (PLN)</label>
-                            <input type="number" name="sim_pensja_praca" min="0" step="100" value="4500">
-                        </div>
+                    <div class="risk-wrap">
+                        <?php foreach ($alarmy_ryzyka as $alarm): ?>
+                            <div class="risk-item risk-<?php echo edusciezka_e($alarm['typ']); ?>">
+                                <strong><?php echo htmlspecialchars($alarm['tytul']); ?></strong>
+                                <div><?php echo htmlspecialchars($alarm['akcja']); ?></div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Wzrost pensji po studiach (%/rok)</label>
-                            <input type="number" name="sim_wzrost_studia" min="0" max="100" step="0.5" value="9">
-                        </div>
-                        <div class="pole">
-                            <label>Wzrost pensji praca od razu (%/rok)</label>
-                            <input type="number" name="sim_wzrost_praca" min="0" max="100" step="0.5" value="5">
-                        </div>
-                    </div>
-                    <button type="submit" name="licz_symulacje" class="btn-dodaj">Porównaj scenariusze</button>
-                </form>
+                </div>
 
-                <?php if ($symulacja): ?>
-                    <div class="sim-wynik">
-                        <div class="sim-reko">Rekomendacja na <?php echo (int) $symulacja['horyzont']; ?> lat:
-                            <strong><?php echo htmlspecialchars($symulacja['rekomendacja']); ?></strong>
-                        </div>
-                        <table>
-                            <tr>
-                                <th>Ścieżka</th>
-                                <th>Bilans finansowy (PLN)</th>
-                                <th>Ryzyko</th>
-                                <th>Czas do uzyskania regularnych dochodów</th>
-                            </tr>
-                            <?php foreach ($symulacja['scenariusze'] as $s): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($s['nazwa']); ?></td>
-                                    <td><?php echo number_format((float) $s['bilans'], 0, ',', ' '); ?></td>
-                                    <td><?php echo (int) $s['ryzyko']; ?>/100</td>
-                                    <td><?php echo (int) $s['czas_do_dochodu']; ?> lat</td>
-                                </tr>
+                <div class="sekcja" id="misje">
+                    <div class="sekcja-naglowek">
+                        <h2>Co robić dziś: 3 najważniejsze kroki</h2>
+                    </div>
+                    <div class="mission-wrap">
+                        <?php if (count($misje_dnia) === 0): ?>
+                            <div class="pusta-tabela">Brak pilnych kroków na dziś. Możesz zaplanować nowe etapy.</div>
+                        <?php else: ?>
+                            <?php foreach ($misje_dnia as $misja): ?>
+                                <div class="mission-item">
+                                    <div>
+                                        <span class="mission-source"><?php echo htmlspecialchars($misja['zrodlo']); ?></span>
+                                        <strong><?php echo htmlspecialchars($misja['tytul']); ?></strong>
+                                        <div class="mission-meta"><?php echo htmlspecialchars($misja['powod']); ?> | termin:
+                                            <?php echo htmlspecialchars(date('d.m.Y', strtotime($misja['termin']))); ?>
+                                        </div>
+                                    </div>
+                                    <a href="<?php echo htmlspecialchars($misja['link']); ?>" class="btn-mission">Otwórz</a>
+                                </div>
                             <?php endforeach; ?>
-                        </table>
+                        <?php endif; ?>
                     </div>
-                <?php endif; ?>
-            </div>
-        </div>
+                </div>
 
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2>Automatyczne portfolio i CV</h2>
-            </div>
-            <div class="cv-actions">
-                <a class="btn-dodaj" href="portfolio-cv.php" target="_blank" rel="noopener">Podgląd portfolio/CV</a>
-                <a class="btn-drugi" href="portfolio-cv.php?print=1" target="_blank" rel="noopener">Pobierz PDF
-                    (drukuj)</a>
-            </div>
-        </div>
+                <div class="sekcja" id="symulator">
+                    <div class="sekcja-naglowek">
+                        <h2>Symulator ścieżek życia</h2>
+                    </div>
+                    <div class="formularz-dodaj">
+                        <form method="POST">
+                            <?php echo edusciezka_csrf_input(); ?>
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Horyzont (lata)</label>
+                                    <input type="number" name="sim_horyzont_lat" min="2" max="10" value="5">
+                                </div>
+                                <div class="pole">
+                                    <label>Lata studiów</label>
+                                    <input type="number" name="sim_lata_studiow" min="1" max="6" value="3">
+                                </div>
+                                <div class="pole">
+                                    <label>Koszt studiów / miesiąc (PLN)</label>
+                                    <input type="number" name="sim_koszt_studia_msc" min="0" step="50" value="1200">
+                                </div>
+                            </div>
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Kursy / rok (PLN)</label>
+                                    <input type="number" name="sim_kursy_rocznie" min="0" step="100" value="3000">
+                                </div>
+                                <div class="pole">
+                                    <label>Start pensji po studiach (PLN)</label>
+                                    <input type="number" name="sim_pensja_studia" min="0" step="100" value="6500">
+                                </div>
+                                <div class="pole">
+                                    <label>Start pensji praca od razu (PLN)</label>
+                                    <input type="number" name="sim_pensja_praca" min="0" step="100" value="4500">
+                                </div>
+                            </div>
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Wzrost pensji po studiach (%/rok)</label>
+                                    <input type="number" name="sim_wzrost_studia" min="0" max="100" step="0.5"
+                                        value="9">
+                                </div>
+                                <div class="pole">
+                                    <label>Wzrost pensji praca od razu (%/rok)</label>
+                                    <input type="number" name="sim_wzrost_praca" min="0" max="100" step="0.5" value="5">
+                                </div>
+                            </div>
+                            <button type="submit" name="licz_symulacje" class="btn-dodaj">Porównaj scenariusze</button>
+                        </form>
 
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2><?php echo $plan_do_edycji ? 'Edytuj etap przyszłości' : 'Dodaj etap przyszłości'; ?></h2>
-            </div>
+                        <?php if ($symulacja): ?>
+                            <div class="sim-wynik">
+                                <div class="sim-reko">Rekomendacja na <?php echo (int) $symulacja['horyzont']; ?> lat:
+                                    <strong><?php echo htmlspecialchars($symulacja['rekomendacja']); ?></strong>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th>Ścieżka</th>
+                                        <th>Bilans finansowy (PLN)</th>
+                                        <th>Ryzyko</th>
+                                        <th>Czas do uzyskania regularnych dochodów</th>
+                                    </tr>
+                                    <?php foreach ($symulacja['scenariusze'] as $s): ?>
+                                        <tr>
+                                            <td><?php echo htmlspecialchars($s['nazwa']); ?></td>
+                                            <td><?php echo number_format((float) $s['bilans'], 0, ',', ' '); ?></td>
+                                            <td><?php echo (int) $s['ryzyko']; ?>/100</td>
+                                            <td><?php echo (int) $s['czas_do_dochodu']; ?> lat</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </table>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
 
-            <div class="formularz-dodaj widoczny">
-                <form method="POST">
-                    <?php echo edusciezka_csrf_input(); ?>
-                    <?php if ($plan_do_edycji): ?>
-                        <input type="hidden" name="plan_id" value="<?php echo (int) $plan_do_edycji['id']; ?>">
-                    <?php endif; ?>
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Etap *</label>
-                            <select name="etap" required>
-                                <option value="szkola_koniec" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'szkola_koniec') ? 'selected' : ''; ?>>Skończenie szkoły
-                                </option>
-                                <option value="studia" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'studia') ? 'selected' : ''; ?>>Studia</option>
-                                <option value="brak_studiow" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'brak_studiow') ? 'selected' : ''; ?>>Brak studiów
-                                </option>
-                                <option value="praca" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'praca') ? 'selected' : ''; ?>>Praca</option>
-                                <option value="certyfikat_szkolenie" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'certyfikat_szkolenie') ? 'selected' : ''; ?>>Certyfikat /
-                                    szkolenie</option>
-                            </select>
+                <div class="sekcja" id="portfolio-cv">
+                    <div class="sekcja-naglowek">
+                        <h2>Automatyczne portfolio i CV</h2>
+                    </div>
+                    <div class="cv-actions">
+                        <a class="btn-dodaj" href="portfolio-cv.php" target="_blank" rel="noopener">Podgląd
+                            portfolio/CV</a>
+                        <a class="btn-drugi" href="portfolio-cv.php?print=1" target="_blank" rel="noopener">Pobierz PDF
+                            (drukuj)</a>
+                    </div>
+                </div>
+
+                <div class="sekcja" id="edytuj-etap">
+                    <div class="sekcja-naglowek">
+                        <h2><?php echo $plan_do_edycji ? 'Edytuj etap przyszłości' : 'Dodaj etap przyszłości'; ?></h2>
+                    </div>
+
+                    <div class="formularz-dodaj widoczny">
+                        <form method="POST">
+                            <?php echo edusciezka_csrf_input(); ?>
+                            <?php if ($plan_do_edycji): ?>
+                                <input type="hidden" name="plan_id" value="<?php echo (int) $plan_do_edycji['id']; ?>">
+                            <?php endif; ?>
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Etap *</label>
+                                    <select name="etap" required>
+                                        <option value="szkola_koniec" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'szkola_koniec') ? 'selected' : ''; ?>>Skończenie
+                                            szkoły
+                                        </option>
+                                        <option value="studia" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'studia') ? 'selected' : ''; ?>>Studia</option>
+                                        <option value="brak_studiow" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'brak_studiow') ? 'selected' : ''; ?>>Brak studiów
+                                        </option>
+                                        <option value="praca" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'praca') ? 'selected' : ''; ?>>Praca</option>
+                                        <option value="certyfikat_szkolenie" <?php echo ($plan_do_edycji && $plan_do_edycji['etap'] === 'certyfikat_szkolenie') ? 'selected' : ''; ?>>
+                                            Certyfikat /
+                                            szkolenie</option>
+                                    </select>
+                                </div>
+                                <div class="pole">
+                                    <label>Tytuł etapu *</label>
+                                    <input type="text" name="tytul" placeholder="np. Matura i koniec liceum"
+                                        value="<?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['tytul']) : ''; ?>"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Data startu *</label>
+                                    <input type="date" name="data_start"
+                                        value="<?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['data_start']) : ''; ?>"
+                                        required>
+                                </div>
+                                <div class="pole">
+                                    <label>Data końca (opcjonalnie)</label>
+                                    <input type="date" name="data_koniec"
+                                        value="<?php echo ($plan_do_edycji && $plan_do_edycji['data_koniec']) ? htmlspecialchars($plan_do_edycji['data_koniec']) : ''; ?>">
+                                </div>
+                            </div>
+
+                            <div class="rzad-pol">
+                                <div class="pole">
+                                    <label>Opis</label>
+                                    <textarea name="opis" rows="2"
+                                        placeholder="Co chcesz osiagnac na tym etapie?"><?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['opis']) : ''; ?></textarea>
+                                </div>
+                            </div>
+
+                            <?php if ($plan_do_edycji): ?>
+                                <button type="submit" name="zapisz_edycje" class="btn-dodaj">Zapisz zmiany</button>
+                                <a href="planer-przyszlosci.php" class="btn-drugi">Anuluj edycje</a>
+                            <?php else: ?>
+                                <button type="submit" name="dodaj_plan" class="btn-dodaj">Dodaj etap</button>
+                            <?php endif; ?>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="sekcja" id="plan">
+                    <div class="sekcja-naglowek">
+                        <h2>Twój plan przyszłości</h2>
+                    </div>
+                    <div style="padding:0">
+                        <?php if (!$wynik_planera || mysqli_num_rows($wynik_planera) == 0): ?>
+                            <div class="pusta-tabela">Brak etapów. Dodaj pierwszy krok i rozpisz swoją ścieżkę.</div>
+                        <?php else: ?>
+                            <table>
+                                <tr>
+                                    <th>Etap</th>
+                                    <th>Tytuł</th>
+                                    <th>Termin</th>
+                                    <th>Status</th>
+                                    <th>Akcje</th>
+                                </tr>
+                                <?php while ($plan = mysqli_fetch_assoc($wynik_planera)): ?>
+                                    <?php
+                                    $statusy = array('plan' => 'Plan', 'w_toku' => 'W toku', 'zakonczone' => 'Zakonczone');
+                                    ?>
+                                    <tr>
+                                        <td>
+                                            <span class="etap-badge etap-<?php echo edusciezka_e($plan['etap']); ?>">
+                                                <?php echo htmlspecialchars($etykiety_etapow[$plan['etap']]); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <strong><?php echo htmlspecialchars($plan['tytul']); ?></strong>
+                                            <?php if ($plan['opis']): ?>
+                                                <br><small class="opis"><?php echo htmlspecialchars($plan['opis']); ?></small>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="termin-komorka">
+                                            <?php echo date('d.m.Y', strtotime($plan['data_start'])); ?>
+                                            <?php if ($plan['data_koniec']): ?>
+                                                <br>do <?php echo date('d.m.Y', strtotime($plan['data_koniec'])); ?>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <span class="status status-<?php echo edusciezka_e($plan['status']); ?>">
+                                                <?php echo htmlspecialchars($statusy[$plan['status']]); ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a class="akcja akcja-edytuj"
+                                                href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?edytuj=' . (int) $plan['id'])); ?>">Edytuj</a>
+                                            <?php if ($plan['status'] != 'w_toku'): ?>
+                                                <a class="akcja akcja-wtoku"
+                                                    href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=w_toku')); ?>">W
+                                                    toku</a>
+                                            <?php endif; ?>
+                                            <?php if ($plan['status'] != 'zakonczone'): ?>
+                                                <a class="akcja akcja-zakoncz"
+                                                    href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=zakonczone')); ?>">Zakończ</a>
+                                            <?php endif; ?>
+                                            <?php if ($plan['status'] != 'plan'): ?>
+                                                <a class="akcja akcja-plan"
+                                                    href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=plan')); ?>">Plan</a>
+                                            <?php endif; ?>
+                                            <a class="akcja akcja-usun"
+                                                href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?usun=' . (int) $plan['id'])); ?>">Usuń</a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </table>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="confirm-modal" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title">Potwierdź usunięcie</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Zamknij"></button>
+                            </div>
+                            <div class="modal-body pt-0">
+                                <p class="confirm-message mb-0">Czy na pewno usunąć ten etap?</p>
+                            </div>
+                            <div class="modal-footer border-0 pt-0">
+                                <button type="button" class="btn btn-outline-secondary confirm-cancel"
+                                    data-bs-dismiss="modal">Anuluj</button>
+                                <button type="button" class="btn btn-danger confirm-ok">Usuń</button>
+                            </div>
                         </div>
-                        <div class="pole">
-                            <label>Tytuł etapu *</label>
-                            <input type="text" name="tytul" placeholder="np. Matura i koniec liceum"
-                                value="<?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['tytul']) : ''; ?>"
-                                required>
+                    </div>
+                </div>
+
+                <div class="sekcja" id="kalendarz">
+                    <div class="sekcja-naglowek kalendarz-top">
+                        <h2>Kalendarz planu, zadań i terminów</h2>
+                        <div class="kalendarz-sterowanie">
+                            <button type="button" id="prevMonth" class="btn-nav">&lt;</button>
+                            <strong id="monthLabel"></strong>
+                            <button type="button" id="nextMonth" class="btn-nav">&gt;</button>
                         </div>
                     </div>
 
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Data startu *</label>
-                            <input type="date" name="data_start"
-                                value="<?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['data_start']) : ''; ?>"
-                                required>
-                        </div>
-                        <div class="pole">
-                            <label>Data końca (opcjonalnie)</label>
-                            <input type="date" name="data_koniec"
-                                value="<?php echo ($plan_do_edycji && $plan_do_edycji['data_koniec']) ? htmlspecialchars($plan_do_edycji['data_koniec']) : ''; ?>">
-                        </div>
+                    <div class="filtry-kalendarza">
+                        <label><input type="checkbox" id="filtr-planer" checked> Planer przyszłości</label>
+                        <label><input type="checkbox" id="filtr-zadanie" checked> Zadania</label>
+                        <label><input type="checkbox" id="filtr-termin" checked> Terminy szkolne</label>
+                        <label><input type="checkbox" id="filtr-zakonczone" checked> Pokaż zakończone</label>
                     </div>
 
-                    <div class="rzad-pol">
-                        <div class="pole">
-                            <label>Opis</label>
-                            <textarea name="opis" rows="2"
-                                placeholder="Co chcesz osiagnac na tym etapie?"><?php echo $plan_do_edycji ? htmlspecialchars($plan_do_edycji['opis']) : ''; ?></textarea>
-                        </div>
+                    <div class="legend">
+                        <span class="legend-item legend-planer">Planer przyszłości</span>
+                        <span class="legend-item legend-zadanie">Zadanie</span>
+                        <span class="legend-item legend-termin">Termin szkolny</span>
                     </div>
 
-                    <?php if ($plan_do_edycji): ?>
-                        <button type="submit" name="zapisz_edycje" class="btn-dodaj">Zapisz zmiany</button>
-                        <a href="planer-przyszlosci.php" class="btn-drugi">Anuluj edycje</a>
-                    <?php else: ?>
-                        <button type="submit" name="dodaj_plan" class="btn-dodaj">Dodaj etap</button>
-                    <?php endif; ?>
-                </form>
-            </div>
-        </div>
-
-        <div class="sekcja">
-            <div class="sekcja-naglowek">
-                <h2>Twój plan przyszłości</h2>
-            </div>
-            <div style="padding:0">
-                <?php if (!$wynik_planera || mysqli_num_rows($wynik_planera) == 0): ?>
-                    <div class="pusta-tabela">Brak etapów. Dodaj pierwszy krok i rozpisz swoją ścieżkę.</div>
-                <?php else: ?>
-                    <table>
-                        <tr>
-                            <th>Etap</th>
-                            <th>Tytuł</th>
-                            <th>Termin</th>
-                            <th>Status</th>
-                            <th>Akcje</th>
-                        </tr>
-                        <?php while ($plan = mysqli_fetch_assoc($wynik_planera)): ?>
-                            <?php
-                            $statusy = array('plan' => 'Plan', 'w_toku' => 'W toku', 'zakonczone' => 'Zakonczone');
-                            ?>
-                            <tr>
-                                <td>
-                                    <span class="etap-badge etap-<?php echo edusciezka_e($plan['etap']); ?>">
-                                        <?php echo htmlspecialchars($etykiety_etapow[$plan['etap']]); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <strong><?php echo htmlspecialchars($plan['tytul']); ?></strong>
-                                    <?php if ($plan['opis']): ?>
-                                        <br><small class="opis"><?php echo htmlspecialchars($plan['opis']); ?></small>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="termin-komorka">
-                                    <?php echo date('d.m.Y', strtotime($plan['data_start'])); ?>
-                                    <?php if ($plan['data_koniec']): ?>
-                                        <br>do <?php echo date('d.m.Y', strtotime($plan['data_koniec'])); ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <span class="status status-<?php echo edusciezka_e($plan['status']); ?>">
-                                        <?php echo htmlspecialchars($statusy[$plan['status']]); ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <a class="akcja akcja-edytuj"
-                                        href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?edytuj=' . (int) $plan['id'])); ?>">Edytuj</a>
-                                    <?php if ($plan['status'] != 'w_toku'): ?>
-                                        <a class="akcja akcja-wtoku"
-                                            href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=w_toku')); ?>">W
-                                            toku</a>
-                                    <?php endif; ?>
-                                    <?php if ($plan['status'] != 'zakonczone'): ?>
-                                        <a class="akcja akcja-zakoncz"
-                                            href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=zakonczone')); ?>">Zakończ</a>
-                                    <?php endif; ?>
-                                    <?php if ($plan['status'] != 'plan'): ?>
-                                        <a class="akcja akcja-plan"
-                                            href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?zmien_status=' . (int) $plan['id'] . '&status=plan')); ?>">Plan</a>
-                                    <?php endif; ?>
-                                    <a class="akcja akcja-usun"
-                                        href="<?php echo edusciezka_e(edusciezka_csrf_url('planer-przyszlosci.php?usun=' . (int) $plan['id'])); ?>"
-                                        onclick="return confirm('Usunac ten etap?')">Usuń</a>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
-                    </table>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="sekcja">
-            <div class="sekcja-naglowek kalendarz-top">
-                <h2>Kalendarz planu, zadań i terminów</h2>
-                <div class="kalendarz-sterowanie">
-                    <button type="button" id="prevMonth" class="btn-nav">&lt;</button>
-                    <strong id="monthLabel"></strong>
-                    <button type="button" id="nextMonth" class="btn-nav">&gt;</button>
+                    <div id="calendarGrid" class="calendar-grid"></div>
                 </div>
             </div>
-
-            <div class="filtry-kalendarza">
-                <label><input type="checkbox" id="filtr-planer" checked> Planer przyszłości</label>
-                <label><input type="checkbox" id="filtr-zadanie" checked> Zadania</label>
-                <label><input type="checkbox" id="filtr-termin" checked> Terminy szkolne</label>
-                <label><input type="checkbox" id="filtr-zakonczone" checked> Pokaż zakończone</label>
-            </div>
-
-            <div class="legend">
-                <span class="legend-item legend-planer">Planer przyszłości</span>
-                <span class="legend-item legend-zadanie">Zadanie</span>
-                <span class="legend-item legend-termin">Termin szkolny</span>
-            </div>
-
-            <div id="calendarGrid" class="calendar-grid"></div>
         </div>
     </div>
 
     <script id="kalendarz-data" type="application/json"><?php echo $kalendarz_json ? $kalendarz_json : '[]'; ?></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
     <script src="../js/planer.js"></script>
 
 </body>

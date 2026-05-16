@@ -110,5 +110,51 @@ document.addEventListener('DOMContentLoaded', function () {
         if (el) el.addEventListener('change', renderKalendarz);
     });
 
+    document.body.addEventListener('click', function (event) {
+        const deleteLink = event.target && event.target.closest ? event.target.closest('.akcja-usun') : null;
+        if (!deleteLink) return;
+
+        event.preventDefault();
+
+        const modal = document.getElementById('confirm-modal');
+        const message = modal ? modal.querySelector('.confirm-message') : null;
+        const confirmButton = modal ? modal.querySelector('.confirm-ok') : null;
+        const cancelButton = modal ? modal.querySelector('.confirm-cancel') : null;
+
+        if (!modal || !confirmButton || !cancelButton || typeof bootstrap === 'undefined') {
+            if (confirm('Usunąć ten etap?')) {
+                window.location.href = deleteLink.href;
+            }
+            return;
+        }
+
+        if (message) {
+            message.textContent = 'Usunąć ten etap?';
+        }
+
+        const bsModal = bootstrap.Modal.getOrCreateInstance(modal);
+
+        const onConfirm = function () {
+            cleanup();
+            bsModal.hide();
+            window.location.href = deleteLink.href;
+        };
+
+        const onCancel = function () {
+            cleanup();
+            bsModal.hide();
+        };
+
+        const cleanup = function () {
+            confirmButton.removeEventListener('click', onConfirm);
+            cancelButton.removeEventListener('click', onCancel);
+        };
+
+        confirmButton.addEventListener('click', onConfirm);
+        cancelButton.addEventListener('click', onCancel);
+        modal.addEventListener('hidden.bs.modal', cleanup, { once: true });
+        bsModal.show();
+    });
+
     renderKalendarz();
 });
